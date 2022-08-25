@@ -27,14 +27,14 @@ double system_uptime();
 uint8_t is_charging();
 
 // So I don't need to re-use code
-int32_t read_bat_file(char * filename);
+double read_bat_file(char * filename);
 
 // Checks a battery's maximum possible energy
-int32_t bat0_energy_full();
-int32_t bat1_energy_full();
+double bat0_energy_full();
+double bat1_energy_full();
 
 // Checks a battery's current energy
-int32_t bat0_energy_now();
-int32_t bat1_energy_now();
+double bat0_energy_now();
+double bat1_energy_now();
 
 #endif // FILES_H_

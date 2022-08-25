@@ -17,25 +17,25 @@ uint8_t is_charging() {
     return charging;
 };
 
-int32_t read_bat_file(char * filename) {
-    int32_t bat_stat;
+double read_bat_file(char * filename) {
+    double bat_stat;
     FILE* bat_file = fopen(filename, "r");
-    fscanf(bat_file, "%d", &bat_stat);
+    fscanf(bat_file, "%lf", &bat_stat);
     return bat_stat;
 };
 
-int32_t bat0_energy_full() {
+double bat0_energy_full() {
     return read_bat_file(BAT0_FULL);
 };
 
-int32_t bat1_energy_full() {
+double bat1_energy_full() {
     return read_bat_file(BAT1_FULL);
 };
 
-int32_t bat0_energy_now() {
+double bat0_energy_now() {
     return read_bat_file(BAT0_NOW);
 };
 
-int32_t bat1_energy_now() {
+double bat1_energy_now() {
     return read_bat_file(BAT1_NOW);
 };
