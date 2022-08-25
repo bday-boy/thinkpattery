@@ -1,8 +1,6 @@
 #ifndef FILES_H_
 #define FILES_H_
 
-#include <stdint.h> // For int32_t
-
 #define UPTIME "/proc/uptime"
 
 #define PS_DIR "/sys/class/power_supply"
@@ -24,10 +22,10 @@
 double system_uptime();
 
 // Checks if the AC adapter is connected
-uint8_t is_charging();
+short is_charging();
 
 // So I don't need to re-use code
-double read_bat_file(char * filename);
+double read_bat_file(char * fname);
 
 // Checks a battery's maximum possible energy
 double bat0_energy_full();

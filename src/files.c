@@ -1,5 +1,5 @@
-#include <stdio.h>  // For fscanf
-#include <stdint.h> // For int32_t
+#include <stdio.h>  // For fscanf()
+#include <unistd.h> // for access()
 
 #include "files.h"
 
@@ -10,16 +10,19 @@ double system_uptime() {
     return uptime;
 };
 
-uint8_t is_charging() {
+short is_charging() {
     short charging;
     FILE* ac_online_file = fopen(AC_ONLINE, "r");
     fscanf(ac_online_file, "%d", &charging);
     return charging;
 };
 
-double read_bat_file(char * filename) {
+double read_bat_file(char * fname) {
+    if (access(fname, F_OK) != 0) {
+        return 0.0;
+    }
     double bat_stat;
-    FILE* bat_file = fopen(filename, "r");
+    FILE* bat_file = fopen(fname, "r");
     fscanf(bat_file, "%lf", &bat_stat);
     return bat_stat;
 };
