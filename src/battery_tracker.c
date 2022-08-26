@@ -17,7 +17,7 @@ void del_tracker(BatteryTracker * tracker) {
     free(tracker);
 };
 
-void update_data(BatteryTracker * tracker) {
+void update_tracker(BatteryTracker * tracker) {
     // Update mean energy using simple moving average method
     tracker->energy_now = bat0_energy_now() + bat1_energy_now();
     update_regressor(tracker->regressor, tracker->energy_now);

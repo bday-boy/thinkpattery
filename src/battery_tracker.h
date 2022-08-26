@@ -21,7 +21,7 @@ BatteryTracker * new_tracker();
 void del_tracker(BatteryTracker * tracker);
 
 // Called each program iteration since we need data regardless
-void update_data(BatteryTracker * tracker);
+void update_tracker(BatteryTracker * tracker);
 
 double battery_percent(BatteryTracker * tracker);
 
