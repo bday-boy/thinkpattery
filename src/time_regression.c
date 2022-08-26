@@ -23,9 +23,6 @@ void del_regressor(TimeRegressor * regressor) {
 void update_regressor(TimeRegressor * regressor, double new_sample) {
     // Use Simple Moving Average method to update the average
     const double old_sample = regressor->samples[regressor->index];
-
-    // TODO: Do something here 
-
     regressor->samples[regressor->index] = new_sample;
     regressor->mean_samples += (new_sample - old_sample) / regressor->samples_size;
 
@@ -61,7 +58,7 @@ double compute_time_variance(TimeRegressor * regressor) {
     return time_variance;
 };
 
-double find_remaining_seconds(TimeRegressor * regressor, int y_val) {
+double find_remaining_seconds(TimeRegressor * regressor, double y_val) {
     set_regression_variables(regressor);
     const double covariance = compute_covariance(regressor);
     const double time_variance = compute_time_variance(regressor);

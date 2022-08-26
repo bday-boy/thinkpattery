@@ -35,6 +35,6 @@ void update_regressor(TimeRegressor * regressor, double new_sample);
 void set_regression_variables(TimeRegressor * regressor);
 double compute_covariance(TimeRegressor * regressor);
 double compute_time_variance(TimeRegressor * regressor);
-double find_remaining_seconds(TimeRegressor * regressor, int y_val);
+double find_remaining_seconds(TimeRegressor * regressor, double y_val);
 
 #endif // REGRESSOR_H_
