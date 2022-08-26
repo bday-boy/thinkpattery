@@ -7,6 +7,7 @@ double system_uptime() {
     double uptime;
     FILE* uptime_file = fopen(UPTIME, "r");
     fscanf(uptime_file, "%lf", &uptime);
+    fclose(uptime_file);
     return uptime;
 };
 
@@ -14,6 +15,7 @@ short is_charging() {
     short charging;
     FILE* ac_online_file = fopen(AC_ONLINE, "r");
     fscanf(ac_online_file, "%hd", &charging);
+    fclose(ac_online_file);
     return charging;
 };
 
@@ -24,6 +26,7 @@ double read_bat_file(char * fname) {
     double bat_stat;
     FILE* bat_file = fopen(fname, "r");
     fscanf(bat_file, "%lf", &bat_stat);
+    fclose(bat_file);
     return bat_stat;
 };
 
