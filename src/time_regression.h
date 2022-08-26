@@ -1,12 +1,6 @@
 #ifndef REGRESSOR_H_
 #define REGRESSOR_H_
 
-// Number of battery energies we want to keep track of. A higher number will
-// make the tracker take a longer amount of time to have meaningful data
-#define SAMPLE_SIZE 32
-
-#define FLOAT_THRESHOLD 0.001
-
 #include <stddef.h>
 
 #include "common.h"
