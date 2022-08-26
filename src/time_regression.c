@@ -63,9 +63,19 @@ double find_remaining_seconds(TimeRegressor * regressor, double y_val) {
     const double covariance = compute_covariance(regressor);
     const double time_variance = compute_time_variance(regressor);
 
+    // Avoid dividing by zero
+    if (-FLOAT_THRESHOLD < time_variance && time_variance < FLOAT_THRESHOLD) {
+        return -1.0;
+    }
+
     // Get m and b for y = mx + b
     const double slope = covariance / time_variance;
     const double intercept = regressor->mean_samples - slope * regressor->mean_time;
+
+    // Avoid dividing by zero
+    if (-FLOAT_THRESHOLD < slope && slope < FLOAT_THRESHOLD) {
+        return -1.0;
+    }
 
     // Solve y = mx + b for x when y = y_val (either 0 or full battery)
     const double end_time = (y_val - intercept) / slope;
