@@ -5,6 +5,9 @@
 
 #include "common.h"
 
+// TODO: Save times as an array and only update regressor when the battery
+// changes energy
+
 typedef struct TimeRegressor {
     // Samples represent y-values
     double samples[SAMPLE_SIZE];

@@ -22,8 +22,7 @@ int main() {
 
     while (1) {
         update_tracker(tracker);
-        const double percent_remaining = battery_percent(tracker);
-        printf("%s %.1lf%%\n", icons[4], percent_remaining);
+        printf("%s %.1lf%%\n", icons[4], battery_percent(tracker));
 
         nanosleep(&tim, NULL);
     };
