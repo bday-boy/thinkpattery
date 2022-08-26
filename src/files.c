@@ -13,7 +13,7 @@ double system_uptime() {
 short is_charging() {
     short charging;
     FILE* ac_online_file = fopen(AC_ONLINE, "r");
-    fscanf(ac_online_file, "%d", &charging);
+    fscanf(ac_online_file, "%hd", &charging);
     return charging;
 };
 
