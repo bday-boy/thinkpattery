@@ -24,7 +24,7 @@ typedef struct TimeRegressor {
     size_t index;
 } TimeRegressor;
 
-TimeRegressor * new_regressor(double sample_interval);
+TimeRegressor * new_regressor();
 void del_regressor(TimeRegressor * regressor);
 
 void update_regressor(TimeRegressor * regressor, double new_sample);
