@@ -21,3 +21,12 @@ void update_data(BatteryTracker * tracker) {
     tracker->energy_now = bat0_energy_now() + bat1_energy_now();
     update_regressor(tracker->regressor, tracker->energy_now);
 };
+
+double battery_percent(BatteryTracker * tracker) {
+    return 100.0 * (tracker->energy_now / tracker->energy_full);
+};
+
+double seconds_until_end(BatteryTracker * tracker) {
+    double y_val = tracker->energy_full * tracker->is_charging;
+    return find_remaining_seconds(tracker->regressor, y_val);
+};

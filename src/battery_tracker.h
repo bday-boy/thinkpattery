@@ -15,11 +15,12 @@
 #include "time_regression.h"
 
 typedef struct BatteryTracker {
-    // Regression variables
+    // Battery state variables
     double energy_now;
     double energy_full;
     short is_charging;
     
+    // Regressor used for predicting when battery will be dead/fully charged
     TimeRegressor * regressor;
 } BatteryTracker;
 
@@ -28,5 +29,9 @@ void del_tracker(BatteryTracker * tracker);
 
 // Called each program iteration since we need data regardless
 void update_data(BatteryTracker * tracker);
+
+double battery_percent(BatteryTracker * tracker);
+
+double seconds_until_end(BatteryTracker * tracker);
 
 #endif // BATTERY_TRACKER_H_
