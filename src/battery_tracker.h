@@ -12,7 +12,7 @@ typedef struct BatteryTracker {
     double energy_now;
     double energy_full;
     short is_charging;
-    
+
     // Regressor used for predicting when battery will be dead/fully charged
     TimeRegressor * regressor;
 } BatteryTracker;

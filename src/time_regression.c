@@ -5,7 +5,7 @@
 
 TimeRegressor * new_regressor() {
     TimeRegressor * regressor = malloc(sizeof(TimeRegressor));
-    
+
     regressor->num_samples = 0;
     regressor->samples_size = SAMPLE_SIZE;
     regressor->sample_interval = SAMPLE_FREQUENCY;
