@@ -1,14 +1,15 @@
 #include <stddef.h>
+#include <stdlib.h>
 
 #include "battery_tracker.h"
 #include "files.h"
 
 BatteryTracker * new_tracker() {
-    BatteryTracker * tracker = malloc (sizeof(BatteryTracker));
+    BatteryTracker * tracker = malloc(sizeof(BatteryTracker));
     tracker->energy_full = bat0_energy_full() + bat1_energy_full();
     tracker->energy_now = bat0_energy_now() + bat1_energy_now();
     tracker->is_charging = is_charging();
-    tracker->regressor = new_regressor(SAMPLE_FREQUENCY);
+    tracker->regressor = new_regressor();
     return tracker;
 };
 

@@ -1,19 +1,19 @@
+#include <stdlib.h>
+
 #include "time_regression.h"
 #include "files.h"
 
-TimeRegressor * new_regressor(double sample_interval) {
-    // This function assumes the memory for the samples array and index_ptr
-    // are already allocated
-    TimeRegressor * regressor = malloc (sizeof(TimeRegressor));
-
+TimeRegressor * new_regressor() {
+    TimeRegressor * regressor = malloc(sizeof(TimeRegressor));
+    
     regressor->num_samples = 0;
     regressor->samples_size = SAMPLE_SIZE;
-    regressor->sample_interval = sample_interval;
-
+    regressor->sample_interval = SAMPLE_FREQUENCY;
     regressor->mean_samples = 0.0;
     regressor->mean_time = 0.0;
-
     regressor->index = 0;
+
+    return regressor;
 };
 
 void del_regressor(TimeRegressor * regressor) {
@@ -28,7 +28,9 @@ void update_regressor(TimeRegressor * regressor, double new_sample) {
 
     // Update index as circular array
     regressor->index = (regressor->index + 1) % regressor->samples_size;
-    regressor->num_samples++;
+    if (regressor->num_samples < regressor->samples_size) {
+        regressor->num_samples++;
+    }
 };
 
 void set_regression_variables(TimeRegressor * regressor) {
