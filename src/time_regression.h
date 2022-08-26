@@ -9,6 +9,8 @@
 
 #include <stddef.h>
 
+#include "common.h"
+
 typedef struct TimeRegressor {
     // Samples represent y-values
     double samples[SAMPLE_SIZE];

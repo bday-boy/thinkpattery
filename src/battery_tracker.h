@@ -12,6 +12,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "common.h"
 #include "time_regression.h"
 
 typedef struct BatteryTracker {
