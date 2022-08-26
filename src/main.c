@@ -1,11 +1,20 @@
 #include <stdio.h>
 #include <stdint.h>
 
-#include "files.h"
+#include "battery_tracker.h"
+
+#define BATTERY_CHARGING 0
+#define BATTERY_EMPTY 1
+#define BATTERY_QUARTER 2
+#define BATTERY_HALF 3
+#define BATTERY_THREE_QUARTERS 4
+#define BATTERY_FULL 5
+
+const char * icons[] = {"", "", "", "", "", ""};
 
 // Currently just test code for files.c
 int main() {
-    uint8_t charging = is_charging();
+    short charging = is_charging();
     double bat0_full = bat0_energy_full();
     double bat1_full = bat1_energy_full();
     double bat0_now = bat0_energy_now();
