@@ -1,7 +1,9 @@
 #include <stdio.h>
 #include <stdint.h>
+#include <time.h>
 
 #include "battery_tracker.h"
+#include "utils.h"
 
 #define BATTERY_CHARGING 0
 #define BATTERY_EMPTY 1
@@ -12,23 +14,19 @@
 
 const char * icons[] = {"", "", "", "", "", ""};
 
-// Currently just test code for files.c
 int main() {
-    short charging = is_charging();
-    double bat0_full = bat0_energy_full();
-    double bat1_full = bat1_energy_full();
-    double bat0_now = bat0_energy_now();
-    double bat1_now = bat1_energy_now();
+    setbuf(stdout, NULL);
+    BatteryTracker * tracker = new_tracker();
 
-    printf("Is charging:       %d\n", charging);
+    struct timespec tim = decimal_to_timespec(SAMPLE_FREQUENCY);
 
-    printf("BAT0 energy full:  %lf\n", bat0_full);
-    printf("BAT1 energy full:  %lf\n", bat1_full);
-    printf("BAT0 energy now:   %lf\n", bat0_now);
-    printf("BAT1 energy now:   %lf\n", bat1_now);
+    while (1) {
+        update_tracker(tracker);
+        const double percent_remaining = battery_percent(tracker);
+        printf("%s %.1lf%%\n", icons[4], percent_remaining);
 
-    printf("Full energy total: %lf\n", bat0_full + bat1_full);
-    printf("Now energy total:  %lf\n", bat0_now + bat1_now);
+        nanosleep(&tim, NULL);
+    };
 
     return 0;
 };
