@@ -13,6 +13,7 @@ BatteryTracker * new_tracker() {
 };
 
 void del_tracker(BatteryTracker * tracker) {
+    del_regressor(tracker->regressor);
     free(tracker);
 };
 
@@ -27,6 +28,8 @@ double battery_percent(BatteryTracker * tracker) {
 };
 
 double seconds_until_end(BatteryTracker * tracker) {
+    // When laptop is charging, we want to know the remaining seconds until
+    // full. When it's discharging, we want to know when it reaches 0.
     double y_val = tracker->energy_full * tracker->is_charging;
     return find_remaining_seconds(tracker->regressor, y_val);
 };
