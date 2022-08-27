@@ -5,9 +5,9 @@
 #include "battery_tracker.h"
 #include "utils.h"
 
-const char * icons[] = {"", "", "", "", "", ""};
 BatteryTracker * bat;
 
+// Changes printing mode from 
 void switch_mode(int signal_num) {
     if (bat == NULL) {
         return;
@@ -29,7 +29,7 @@ int main() {
 
     while (1) {
         update_tracker(bat);
-        print_info(bat, icons[3]);
+        print_info(bat);
 
         nanosleep(&tim, NULL);
     };

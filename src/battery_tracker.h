@@ -9,6 +9,8 @@
 #define PERCENT_MODE 0
 #define REMAINING_TIME_MODE 1
 
+extern const char * icons[];
+
 typedef struct BatteryTracker {
     // Battery state variables
     double energy_now;
@@ -16,7 +18,7 @@ typedef struct BatteryTracker {
     short is_charging;
     unsigned short mode;
 
-    // Regressor used for predicting when battery will be dead/fully charged
+    // Used for predicting when battery will be dead/fully charged
     ExponentialMovingAverage * exp_moving_avg;
 } BatteryTracker;
 
@@ -33,12 +35,17 @@ double battery_percent(BatteryTracker * tracker);
 double seconds_until_end(BatteryTracker * tracker);
 
 // Prints battery icon and percent remaining
-void print_battery_percent(BatteryTracker * tracker, const char * icon);
+void print_battery_percent(BatteryTracker * tracker);
 
 // Prints a float of seconds as hours and minutes
 void print_time_left(BatteryTracker * tracker);
 
 // Prints battery info based on modec
-void print_info(BatteryTracker * tracker, const char * icon);
+void print_info(BatteryTracker * tracker);
+
+// Helpers
+
+// Gets the appropriate icon for the current battery state
+const char * get_icon(short charging_state, double percent_left);
 
 #endif // BATTERY_TRACKER_H_

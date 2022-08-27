@@ -5,6 +5,8 @@
 #include "battery_tracker.h"
 #include "files.h"
 
+const char * icons[] = {"", "", "", "", "", ""};
+
 BatteryTracker * new_tracker() {
     BatteryTracker * tracker = malloc(sizeof(BatteryTracker));
 
@@ -12,6 +14,7 @@ BatteryTracker * new_tracker() {
     tracker->energy_now = bat0_energy_now() + bat1_energy_now();
     tracker->is_charging = is_charging();
     tracker->mode = PERCENT_MODE;
+
     tracker->exp_moving_avg = new_exp_moving_average(system_uptime(),
                                                      tracker->energy_now);
 
@@ -49,12 +52,13 @@ double seconds_until_end(BatteryTracker * tracker) {
 };
 
 // Prints battery icon and percent remaining
-void print_battery_percent(BatteryTracker * tracker, const char * icon) {
+void print_battery_percent(BatteryTracker * tracker) {
     const double remaining_percent = battery_percent(tracker);
     if (remaining_percent == NO_BATTERY_INFO) {
         printf("N/A %%\n");
         return;
     }
+    const char * icon = get_icon(tracker->is_charging, remaining_percent);
     printf("%s %.1lf%%\n", icon, remaining_percent);
 };
 
@@ -68,10 +72,10 @@ void print_time_left(BatteryTracker * tracker) {
     printf("%.0lfmin left\n", time_left / 60.0);
 };
 
-void print_info(BatteryTracker * tracker, const char * icon) {
+void print_info(BatteryTracker * tracker) {
     switch (tracker->mode) {
         case PERCENT_MODE:
-            print_battery_percent(tracker, icon);
+            print_battery_percent(tracker);
             break;
         case REMAINING_TIME_MODE:
             print_time_left(tracker);
@@ -80,4 +84,20 @@ void print_info(BatteryTracker * tracker, const char * icon) {
             printf("N/A\n");
             break;
     };
+};
+
+const char * get_icon(short charging_state, double percent_left) {
+    if (charging_state) {
+        return icons[BATTERY_CHARGING];
+    } else if (percent_left < 10.0) {
+        return icons[BATTERY_EMPTY];
+    } else if (percent_left < 35.0) {
+        return icons[BATTERY_QUARTER];
+    } else if (percent_left < 65.0) {
+        return icons[BATTERY_HALF];
+    } else if (percent_left < 90.0) {
+        return icons[BATTERY_THREE_QUARTERS];
+    } else {
+        return icons[BATTERY_FULL];
+    }
 };
