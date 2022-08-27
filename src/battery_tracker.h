@@ -2,7 +2,6 @@
 #define BATTERY_TRACKER_H_
 
 #include <stddef.h>
-#include <stdint.h>
 
 #include "common.h"
 #include "moving_average.h"
@@ -27,8 +26,10 @@ void del_tracker(BatteryTracker * tracker);
 // Called each program iteration since we need data regardless
 void update_tracker(BatteryTracker * tracker);
 
+// Gets remaining battery percent
 double battery_percent(BatteryTracker * tracker);
 
+// Gets number of seconds until reaching a certain energy value
 double seconds_until_end(BatteryTracker * tracker);
 
 // Prints battery icon and percent remaining

@@ -1,9 +1,13 @@
 #ifndef COMMON_H_
 #define COMMON_H_
 
-// Number of battery energies we want to keep track of. A higher number will
-// make the tracker take a longer amount of time to have meaningful data
-#define SAMPLE_SIZE 32
+// Battery icon indices
+#define BATTERY_CHARGING 0
+#define BATTERY_EMPTY 1
+#define BATTERY_QUARTER 2
+#define BATTERY_HALF 3
+#define BATTERY_THREE_QUARTERS 4
+#define BATTERY_FULL 5
 
 // Doesn't need to be very low -- the energies shown in each BATX/energy
 // file usually only change every few seconds or so anyway
