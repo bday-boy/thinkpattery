@@ -5,6 +5,8 @@
 
 #include "common.h"
 
+#define TIME_UNAVAILABLE -1.0
+
 // TODO: Save times as an array and only update regressor when the battery
 // changes energy
 
@@ -29,6 +31,7 @@ typedef struct TimeRegressor {
 TimeRegressor * new_regressor();
 void del_regressor(TimeRegressor * regressor);
 
+// Called every cycle of the program
 void update_regressor(TimeRegressor * regressor, double new_uptime, double new_sample);
 
 // Only called when the program wants to predict remaining progress
