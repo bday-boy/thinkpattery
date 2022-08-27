@@ -13,7 +13,7 @@ TARGET=thinkpattery
 default: $(TARGET)
 
 $(TARGET): ./src/*.c
-	$(CC) $(CFLAGS) ./src/*.c -o ./$(TARGET).out
+	$(CC) $(CFLAGS) ./src/*.c -o ./$(TARGET)
 
 clean:
 	$(RM) $(TARGET)
