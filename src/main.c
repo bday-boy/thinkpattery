@@ -15,14 +15,16 @@
 const char * icons[] = {"", "", "", "", "", ""};
 
 int main() {
+    // Stops printf from buffering
     setbuf(stdout, NULL);
-    BatteryTracker * tracker = new_tracker();
 
+    BatteryTracker * tracker = new_tracker();
+    tracker->mode = REMAINING_TIME_MODE;
     struct timespec tim = decimal_to_timespec(SAMPLE_FREQUENCY);
 
     while (1) {
         update_tracker(tracker);
-        printf("%s %.1lf%%\n", icons[4], battery_percent(tracker));
+        print_info(tracker, icons[3]);
 
         nanosleep(&tim, NULL);
     };
