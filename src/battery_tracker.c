@@ -12,13 +12,14 @@ BatteryTracker * new_tracker() {
     tracker->energy_now = bat0_energy_now() + bat1_energy_now();
     tracker->is_charging = is_charging();
     tracker->mode = PERCENT_MODE;
-    tracker->regressor = new_regressor();
+    tracker->exp_moving_avg = new_exp_moving_average(system_uptime(),
+                                                     tracker->energy_now);
 
     return tracker;
 };
 
 void del_tracker(BatteryTracker * tracker) {
-    del_regressor(tracker->regressor);
+    del_exp_moving_average(tracker->exp_moving_avg);
     free(tracker);
 };
 
@@ -26,7 +27,7 @@ void update_tracker(BatteryTracker * tracker) {
     // Update mean energy using simple moving average method
     tracker->energy_now = bat0_energy_now() + bat1_energy_now();
     double new_uptime = system_uptime();
-    update_regressor(tracker->regressor, new_uptime, tracker->energy_now);
+    progress_avg(tracker->exp_moving_avg, new_uptime, tracker->energy_now);
 };
 
 double battery_percent(BatteryTracker * tracker) {
@@ -42,8 +43,9 @@ double battery_percent(BatteryTracker * tracker) {
 double seconds_until_end(BatteryTracker * tracker) {
     // When laptop is charging, we want to know the remaining seconds until
     // full. When it's discharging, we want to know when it reaches 0.
-    const double y_val = tracker->energy_full * tracker->is_charging;
-    return find_remaining_seconds(tracker->regressor, y_val);
+    double goal_amount = tracker->energy_now \
+        - tracker->energy_full * tracker->is_charging;
+    return time_remaining(tracker->exp_moving_avg, goal_amount);
 };
 
 // Prints battery icon and percent remaining

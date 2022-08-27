@@ -5,7 +5,7 @@
 #include <stdint.h>
 
 #include "common.h"
-#include "time_regression.h"
+#include "moving_average.h"
 
 #define PERCENT_MODE 0
 #define REMAINING_TIME_MODE 1
@@ -18,7 +18,7 @@ typedef struct BatteryTracker {
     unsigned short mode;
 
     // Regressor used for predicting when battery will be dead/fully charged
-    TimeRegressor * regressor;
+    ExponentialMovingAverage * exp_moving_avg;
 } BatteryTracker;
 
 BatteryTracker * new_tracker();
