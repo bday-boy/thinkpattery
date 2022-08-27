@@ -9,15 +9,14 @@
 // changes energy
 
 typedef struct TimeRegressor {
-    // Samples represent y-values
-    double samples[SAMPLE_SIZE];
-    size_t samples_size;
-    size_t num_samples;
+    size_t size;
+    size_t length;
 
-    // Used to generate the time variance
-    double start_time;
-    double current_time;
-    double sample_interval;
+    // Sample values are the y-axis
+    double samples[SAMPLE_SIZE];
+
+    // Time values are the x-axis
+    double times[SAMPLE_SIZE];
 
     // Statistical variables
     double mean_samples;
@@ -30,12 +29,14 @@ typedef struct TimeRegressor {
 TimeRegressor * new_regressor();
 void del_regressor(TimeRegressor * regressor);
 
-void update_regressor(TimeRegressor * regressor, double new_sample);
+void update_regressor(TimeRegressor * regressor, double new_uptime, double new_sample);
 
 // Only called when the program wants to predict remaining progress
-void set_regression_variables(TimeRegressor * regressor);
 double compute_covariance(TimeRegressor * regressor);
 double compute_time_variance(TimeRegressor * regressor);
 double find_remaining_seconds(TimeRegressor * regressor, double y_val);
+
+// Helpers
+size_t get_prev_index(TimeRegressor * regressor);
 
 #endif // REGRESSOR_H_
