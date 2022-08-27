@@ -18,6 +18,10 @@
 #define BAT0_NOW BAT0 "/energy_now"
 #define BAT1_NOW BAT1 "/energy_now"
 
+#define NO_UPTIME -1.0
+#define NO_CHARGING_INFO -1
+#define NO_BATTERY_INFO 0.0
+
 // Checks system uptime as a double
 double system_uptime();
 
