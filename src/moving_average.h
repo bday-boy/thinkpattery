@@ -2,7 +2,7 @@
 #define MOVING_AVERAGE_H_
 
 #define ALPHA 0.1
-#define VALUE_UNAVAILABLE -1.0
+#define TIME_UNAVAILABLE -1.0
 
 // A time-based exponential moving average calculator
 typedef struct ExponentialMovingAverage {
@@ -23,7 +23,10 @@ ExponentialMovingAverage * new_exp_moving_average(double initial_time,
                                                   double initial_sample);
 void del_exp_moving_average(ExponentialMovingAverage * exp_moving_avg);
 
-double progress_avg(ExponentialMovingAverage * exp_moving_avg,
-                    double new_time, double new_sample);
+void progress_avg(ExponentialMovingAverage * exp_moving_avg,
+                  double new_time, double new_sample);
+
+double time_remaining(ExponentialMovingAverage * exp_moving_avg,
+                      double goal_amount);
 
 #endif // MOVING_AVERAGE_H_

@@ -1,3 +1,4 @@
+#include <math.h>
 #include <stdlib.h>
 
 #include "common.h"
@@ -20,21 +21,31 @@ void del_exp_moving_average(ExponentialMovingAverage * exp_moving_avg) {
     free(exp_moving_avg);
 };
 
-double progress_avg(ExponentialMovingAverage * exp_moving_avg,
-                    double new_time, double new_sample) {
-    const double run = new_time - exp_moving_avg->time;
-    const double rise = new_sample - exp_moving_avg->sample;
-    const double speed = rise / run;
-
-    if (small_float(speed)) {
-        return VALUE_UNAVAILABLE;
+// TODO: Add code for checking how long until charging completes
+void progress_avg(ExponentialMovingAverage * exp_moving_avg,
+                  double new_time, double new_sample) {
+    // Ignore when the new sample is the same as the last one
+    if (exp_moving_avg->sample == new_sample) {
+        return;
     }
+
+    double run = new_time - exp_moving_avg->time;
+    double rise = new_sample - exp_moving_avg->sample;
+    double speed = rise / run;
 
     // Speed is in battery energy per second
     exp_moving_avg->speed = (exp_moving_avg->alpha * speed) \
         + ((1 - exp_moving_avg->alpha) * exp_moving_avg->speed);
     exp_moving_avg->time = new_time;
     exp_moving_avg->sample = new_sample;
+};
 
-    return new_sample / exp_moving_avg->speed;
+double time_remaining(ExponentialMovingAverage * exp_moving_avg,
+                      double goal_amount) {
+    // Don't wanna cause any massive blowup
+    if (small_float(exp_moving_avg->speed)) {
+        return TIME_UNAVAILABLE;
+    }
+
+    return fabs(goal_amount / exp_moving_avg->speed);
 };
