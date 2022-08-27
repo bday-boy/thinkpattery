@@ -7,7 +7,7 @@
 
 // Doesn't need to be very low -- the energies shown in each BATX/energy
 // file usually only change every few seconds or so anyway
-#define SAMPLE_FREQUENCY 0.25 // float in seconds
+#define SAMPLE_FREQUENCY 1.0 // float in seconds
 
 // Threshold for avoiding division by ridiculously small numbers
 #define FLOAT_THRESHOLD 0.001
