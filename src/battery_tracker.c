@@ -3,16 +3,17 @@
 #include <stdlib.h>
 
 #include "battery_tracker.h"
-#include "files.h"
 
 const char * icons[] = {"", "", "", "", "", ""};
 
 BatteryTracker * new_tracker() {
     BatteryTracker * tracker = malloc(sizeof(BatteryTracker));
 
-    tracker->energy_full = bat0_energy_full() + bat1_energy_full();
-    tracker->energy_now = bat0_energy_now() + bat1_energy_now();
-    tracker->is_charging = is_charging();
+    tracker->bfmanager = new_battery_file_manager();
+
+    tracker->energy_full = bat_energy_full(tracker->bfmanager);
+    tracker->energy_now = bat_energy_now(tracker->bfmanager);
+    tracker->is_charging = is_charging(tracker->bfmanager);
     tracker->mode = PERCENT_MODE;
 
     tracker->exp_moving_avg = new_exp_moving_average(system_uptime(),
@@ -28,7 +29,8 @@ void del_tracker(BatteryTracker * tracker) {
 
 void update_tracker(BatteryTracker * tracker) {
     // Update mean energy using simple moving average method
-    tracker->energy_now = bat0_energy_now() + bat1_energy_now();
+    tracker->energy_now = bat_energy_now(tracker->bfmanager);
+    tracker->is_charging = is_charging(tracker->bfmanager);
     double new_uptime = system_uptime();
     progress_avg(tracker->exp_moving_avg, new_uptime, tracker->energy_now);
 };

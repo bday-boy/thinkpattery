@@ -1,42 +1,39 @@
 #ifndef FILES_H_
 #define FILES_H_
 
-#define UPTIME "/proc/uptime"
-
-#define PS_DIR "/sys/class/power_supply"
-
-#define AC PS_DIR "/AC"
-
-#define AC_ONLINE AC "/online"
-
-#define BAT0 PS_DIR "/BAT0"
-#define BAT1 PS_DIR "/BAT1"
-
-#define BAT0_FULL BAT0 "/energy_full"
-#define BAT1_FULL BAT1 "/energy_full"
-
-#define BAT0_NOW BAT0 "/energy_now"
-#define BAT1_NOW BAT1 "/energy_now"
+#define UPTIME_FILE "/proc/uptime"
+#define POWER_SUPPLY_DIR "/sys/class/power_supply"
+#define AC_DIR "AC"
+#define BAT_DIR "BAT"
+#define ENERGY_FULL "energy_full"
+#define ENERGY_NOW "energy_now"
 
 #define NO_UPTIME -1.0
 #define NO_CHARGING_INFO -1
 #define NO_BATTERY_INFO 0.0
+#define MAX_FILENAME_LEN 1024
 
-// Checks system uptime as a double
-double system_uptime();
+typedef struct BatteryFileManager {
+    unsigned short num_batteries;
+    char ** energy_full_files;
+    char ** energy_now_files;
+
+    char * ac_online_file;
+} BatteryFileManager;
+
+BatteryFileManager * new_battery_file_manager();
+void del_battery_file_manager(BatteryFileManager * bfmanager);
 
 // Checks if the AC adapter is connected
-short is_charging();
+short is_charging(BatteryFileManager * bfmanager);
+
+double bat_energy_full(BatteryFileManager * bfmanager);
+double bat_energy_now(BatteryFileManager * bfmanager);
 
 // So I don't need to re-use code
 double read_bat_file(char * fname);
 
-// Checks a battery's maximum possible energy
-double bat0_energy_full();
-double bat1_energy_full();
-
-// Checks a battery's current energy
-double bat0_energy_now();
-double bat1_energy_now();
+// Checks system uptime as a double
+double system_uptime();
 
 #endif // FILES_H_

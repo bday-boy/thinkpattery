@@ -4,6 +4,7 @@
 #include <stddef.h>
 
 #include "common.h"
+#include "files.h"
 #include "moving_average.h"
 
 #define PERCENT_MODE 0
@@ -12,6 +13,9 @@
 extern const char * icons[];
 
 typedef struct BatteryTracker {
+    // Reads data from AC file BATX files in the /sys/class/power_supply dir
+    BatteryFileManager * bfmanager;
+
     // Battery state variables
     double energy_now;
     double energy_full;
