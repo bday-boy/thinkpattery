@@ -11,3 +11,4 @@
   - Quick 'n dirty: Collect n (maybe 5) data points, compute each adjacent
     pair's slopes, and average the slopes
 - Actually double check memory leaks and shit
+- Add error logging
