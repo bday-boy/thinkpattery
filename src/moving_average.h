@@ -1,7 +1,7 @@
 #ifndef MOVING_AVERAGE_H_
 #define MOVING_AVERAGE_H_
 
-#define ALPHA 0.1
+#define ALPHA 0.05
 #define TIME_UNAVAILABLE -1.0
 
 // A time-based exponential moving average calculator
