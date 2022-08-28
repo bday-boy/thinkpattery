@@ -4,6 +4,16 @@
 #include "files.h"          // For BatteryFileManager
 #include "moving_average.h" // For ExponentialMovingAverage
 
+extern const char * charging_icon;
+extern const char * percent_icons[];
+extern const char * time_icon;
+extern const char * health_icon_good;
+extern const char * health_icon_bad;
+
+extern const char * percent_format;
+extern const char * time_format;
+extern const char * health_format;
+
 typedef enum output_modes_t {
     PERCENT_MODE = 0,
     REMAINING_TIME_MODE,
@@ -26,10 +36,9 @@ typedef enum battery_percent_icons_t {
     TOTAL_ICONS
 } battery_percent_icons_t;
 
-extern const char * charging_icon;
-extern const char * icons[];
-
-typedef struct BatteryTracker {
+// TODO: Print in a smarter way, like loading the print double value and print
+// format string into pointers rather than using functions to print values
+typedef struct BatteryTracker {    
     // Reads data from AC file BATX files in the /sys/class/power_supply dir
     BatteryFileManager * bfmanager;
 
@@ -37,8 +46,15 @@ typedef struct BatteryTracker {
     double energy_full;
     double energy_now;
     double battery_health;
+    double prev_state_value;
     short is_charging;
+
+    // Info display variables
+    double print_variable;
+    char * icon;
+    char * print_format;
     output_modes_t mode;
+    output_modes_t prev_mode;
 
     // Used for predicting when battery will be dead/fully charged
     ExponentialMovingAverage * exp_moving_avg;
@@ -54,8 +70,8 @@ void update_tracker(BatteryTracker * tracker);
 // changed very often.
 void rotate_display_mode(BatteryTracker * tracker);
 
-// Prints battery info based on current display mode.
-void print_info(BatteryTracker * tracker);
+// Used for avoiding unnecessary printing when nothing has changed
+double no_state_change(BatteryTracker * tracker, double new_state_value);
 
 // Divides total current energy by total energy when full and multiplies by
 // 100.0.
@@ -69,17 +85,20 @@ double battery_health(BatteryTracker * tracker);
 double seconds_until_end(BatteryTracker * tracker);
 
 // Prints battery icon and percent remaining.
-void print_battery_percent(BatteryTracker * tracker);
+void load_battery_percent(BatteryTracker * tracker);
 
 // Prints a float of seconds as hours and minutes.
-void print_time_left(BatteryTracker * tracker);
+void load_time_left(BatteryTracker * tracker);
 
 // Prints battery icon and percent remaining.
-void print_battery_health(BatteryTracker * tracker);
+void load_battery_health(BatteryTracker * tracker);
+
+// Prints battery info based on current display mode.
+void print_info(BatteryTracker * tracker);
 
 // Helpers
 
 // Gets the appropriate icon for the current battery state.
-const char * get_icon(short charging_state, double percent_left);
+const char * get_percent_icon(short charging_state, double percent_left);
 
 #endif // BATTERY_TRACKER_H_
