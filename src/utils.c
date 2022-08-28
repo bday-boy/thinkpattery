@@ -1,4 +1,5 @@
-#include <math.h>
+#include <math.h>   // For modf()
+#include <string.h> // For strncmp()
 
 #include "utils.h"
 
@@ -14,6 +15,6 @@ struct timespec decimal_to_timespec(double time_amount) {
     return tim;
 };
 
-unsigned short starts_with(char * str, const char * prefix, size_t length) {
-    return strncmp(str, prefix, length) == 0;
+unsigned short starts_with(char * str, const char * prefix, size_t prefix_length) {
+    return strncmp(str, prefix, prefix_length) == 0;
 };
