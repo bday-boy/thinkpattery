@@ -35,6 +35,11 @@ void update_tracker(BatteryTracker * tracker) {
     progress_avg(tracker->exp_moving_avg, new_uptime, tracker->energy_now);
 };
 
+// Called each program iteration since we need data regardless
+void rotate_display_mode(BatteryTracker * tracker) {
+    tracker->mode = (tracker->mode + 1) % TOTAL_MODES;
+};
+
 double battery_percent(BatteryTracker * tracker) {
     if (
         -FLOAT_THRESHOLD < tracker->energy_full
@@ -83,7 +88,7 @@ void print_info(BatteryTracker * tracker) {
             print_time_left(tracker);
             break;
         default:
-            printf("N/A\n");
+            printf("Unknown mode\n");
             break;
     };
 };

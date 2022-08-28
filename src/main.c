@@ -7,18 +7,16 @@
 
 BatteryTracker * bat;
 
-// Changes printing mode from 
+// Changes printing mode between percent and time left
 void switch_mode(int signal_num) {
     if (bat == NULL) {
         return;
     }
-    bat->mode = !bat->mode;
+    rotate_display_mode(bat);
 };
 
-// TODO: Change SAMPLE_FREQUENCY macro to a default val and make SIGUSR
-// function change sleep time (slower for time estimation)
 int main() {
-    // Stops printf from buffering
+    // Stops printf from buffering so we don't need to flush after every call
     setbuf(stdout, NULL);
 
     // Sets up handling SIGUSR1 to change battery tracker mode
