@@ -22,8 +22,9 @@ typedef struct BatteryTracker {
     BatteryFileManager * bfmanager;
 
     // Battery state variables
-    double energy_now;
     double energy_full;
+    double energy_now;
+    double battery_health;
     short is_charging;
     output_modes_t mode;
 
@@ -40,10 +41,11 @@ void update_tracker(BatteryTracker * tracker);
 // Called each program iteration since we need data regardless
 void rotate_display_mode(BatteryTracker * tracker);
 
-// Gets remaining battery percent
 double battery_percent(BatteryTracker * tracker);
+double battery_health(BatteryTracker * tracker);
 
-// Gets number of seconds until reaching a certain energy value
+// Gets number of seconds until reaching a certain energy value (usually 0 or
+// energy_full)
 double seconds_until_end(BatteryTracker * tracker);
 
 // Prints battery icon and percent remaining
@@ -51,6 +53,9 @@ void print_battery_percent(BatteryTracker * tracker);
 
 // Prints a float of seconds as hours and minutes
 void print_time_left(BatteryTracker * tracker);
+
+// Prints battery icon and percent remaining
+void print_battery_health(BatteryTracker * tracker);
 
 // Prints battery info based on modec
 void print_info(BatteryTracker * tracker);

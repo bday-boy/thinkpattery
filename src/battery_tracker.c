@@ -1,4 +1,4 @@
-#include <stddef.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -13,6 +13,8 @@ BatteryTracker * new_tracker() {
 
     tracker->energy_full = bat_energy_full(tracker->bfmanager);
     tracker->energy_now = bat_energy_now(tracker->bfmanager);
+    tracker->battery_health = 100.0 * tracker->energy_full \
+        / bat_energy_design(tracker->bfmanager);
     tracker->is_charging = is_charging(tracker->bfmanager);
     tracker->mode = PERCENT_MODE;
 
@@ -35,8 +37,12 @@ void update_tracker(BatteryTracker * tracker) {
     progress_avg(tracker->exp_moving_avg, new_uptime, tracker->energy_now);
 };
 
-// Called each program iteration since we need data regardless
+// Changes the display mode and refreshes the data that doesn't need to be
+// changed very often
 void rotate_display_mode(BatteryTracker * tracker) {
+    tracker->energy_full = bat_energy_full(tracker->bfmanager);
+    tracker->battery_health = 100.0 * tracker->energy_full \
+        / bat_energy_design(tracker->bfmanager);
     tracker->mode = (tracker->mode + 1) % TOTAL_MODES;
 };
 
@@ -45,7 +51,7 @@ double battery_percent(BatteryTracker * tracker) {
         -FLOAT_THRESHOLD < tracker->energy_full
         && tracker->energy_full < FLOAT_THRESHOLD
     ) {
-        return NO_BATTERY_INFO;
+        return NO_ENERGY_INFO;
     }
     return 100.0 * (tracker->energy_now / tracker->energy_full);
 };
@@ -61,7 +67,7 @@ double seconds_until_end(BatteryTracker * tracker) {
 // Prints battery icon and percent remaining
 void print_battery_percent(BatteryTracker * tracker) {
     const double remaining_percent = battery_percent(tracker);
-    if (remaining_percent == NO_BATTERY_INFO) {
+    if (remaining_percent == NO_ENERGY_INFO) {
         printf("N/A %%\n");
         return;
     }
@@ -73,10 +79,24 @@ void print_battery_percent(BatteryTracker * tracker) {
 void print_time_left(BatteryTracker * tracker) {
     const double time_left = seconds_until_end(tracker);
     if (time_left == TIME_UNAVAILABLE) {
-        printf("N/A Time\n");
+        printf("N/A time\n");
         return;
     }
-    printf("%.0lfmin left\n", time_left / 60.0);
+    const double min = fmod(time_left / 60.0, 60.0);
+    if (time_left > 3600.0) {
+        const double hrs = floor(time_left / 3600.0);
+        printf("%.0lfhr %.0lfmin left\n", hrs, min);
+    } else {
+        printf("%.0lfmin left\n", min);
+    }
+};
+
+void print_battery_health(BatteryTracker * tracker) {
+    if (tracker->battery_health <= FLOAT_THRESHOLD) {
+        printf("N/A health\n");
+        return;
+    }
+    printf("%.1lf%% healthy\n", tracker->battery_health);
 };
 
 void print_info(BatteryTracker * tracker) {
@@ -86,6 +106,9 @@ void print_info(BatteryTracker * tracker) {
             break;
         case REMAINING_TIME_MODE:
             print_time_left(tracker);
+            break;
+        case BATTERY_HEALTH_MODE:
+            print_battery_health(tracker);
             break;
         default:
             printf("Unknown mode\n");
