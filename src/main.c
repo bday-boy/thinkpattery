@@ -1,8 +1,9 @@
-#include <signal.h>
-#include <stdio.h>
-#include <time.h>
+#include <signal.h> // For signal(), SIGUSR1
+#include <stdio.h>  // For setbuf()
+#include <time.h>   // For nanosleep(), timespec
 
 #include "battery_tracker.h"
+#include "common.h"
 #include "utils.h"
 
 BatteryTracker * bat;
@@ -31,6 +32,8 @@ int main() {
 
         nanosleep(&tim, NULL);
     };
+
+    del_tracker(bat);
 
     return 0;
 };
