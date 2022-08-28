@@ -21,7 +21,6 @@ void del_exp_moving_average(ExponentialMovingAverage * exp_moving_avg) {
     free(exp_moving_avg);
 };
 
-// TODO: Add code for checking how long until charging completes
 void progress_avg(ExponentialMovingAverage * exp_moving_avg,
                   double new_time, double new_sample) {
     // Ignore when the new sample is the same as the last one

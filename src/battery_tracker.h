@@ -36,8 +36,6 @@ typedef enum battery_percent_icons_t {
     TOTAL_ICONS
 } battery_percent_icons_t;
 
-// TODO: Print in a smarter way, like loading the print double value and print
-// format string into pointers rather than using functions to print values
 typedef struct BatteryTracker {    
     // Reads data from AC file BATX files in the /sys/class/power_supply dir
     BatteryFileManager * bfmanager;
