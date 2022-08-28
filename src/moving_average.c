@@ -13,6 +13,7 @@ ExponentialMovingAverage * new_exp_moving_average(double initial_time,
     exp_moving_avg->speed = 0.0;
     exp_moving_avg->time = initial_time;
     exp_moving_avg->sample = initial_sample;
+    exp_moving_avg->num_samples = 0;
 
     return exp_moving_avg;
 };
@@ -33,8 +34,14 @@ void progress_avg(ExponentialMovingAverage * exp_moving_avg,
     double speed = rise / run;
 
     // Speed is in battery energy per second
-    exp_moving_avg->speed = (exp_moving_avg->alpha * speed) \
-        + ((1 - exp_moving_avg->alpha) * exp_moving_avg->speed);
+    if (exp_moving_avg->num_samples < INITIAL_LENGTH) {
+        exp_moving_avg->speed += speed / INITIAL_LENGTH;
+        exp_moving_avg->num_samples++;
+    } else {
+        exp_moving_avg->speed = (exp_moving_avg->alpha * speed) \
+            + ((1 - exp_moving_avg->alpha) * exp_moving_avg->speed);
+    }
+
     exp_moving_avg->time = new_time;
     exp_moving_avg->sample = new_sample;
 };

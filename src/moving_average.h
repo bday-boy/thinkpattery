@@ -1,10 +1,13 @@
 #ifndef MOVING_AVERAGE_H_
 #define MOVING_AVERAGE_H_
 
-#define ALPHA 0.05
+#include <stddef.h>
+
+#define ALPHA 0.1
+#define INITIAL_LENGTH 5
 #define TIME_UNAVAILABLE -1.0
 
-// A time-based exponential moving average calculator
+// A time-based exponential moving average (EMA) calculator
 typedef struct ExponentialMovingAverage {
     // Smoothing factor - higher prioritizes most recent slope
     double alpha;
@@ -17,6 +20,9 @@ typedef struct ExponentialMovingAverage {
 
     // Current y value
     double sample;
+
+    // Number of samples to do a normal average on before starting EMA
+    size_t num_samples;
 } ExponentialMovingAverage;
 
 ExponentialMovingAverage * new_exp_moving_average(double initial_time,
