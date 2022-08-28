@@ -5,7 +5,7 @@ CC=gcc
 #  -g    adds debugging information to the executable file
 #  -Wall turns on most, but not all, compiler warnings
 #  -O4   the highest level of compiler opimizations
-CFLAGS=-Wall -O4
+CFLAGS=-lm -Wall -O4
 
 # the build target executable:
 TARGET=thinkpattery
