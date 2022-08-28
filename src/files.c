@@ -2,6 +2,7 @@
 #include <stdio.h>  // For fscanf()
 #include <stdlib.h> // For malloc()
 
+#include "common.h"
 #include "files.h"
 #include "utils.h"
 
@@ -12,11 +13,12 @@ BatteryFileManager * new_battery_file_manager() {
     const size_t file_memsize = sizeof(char) * MAX_FILENAME_LEN;
     const char * ac_dir = AC_DIR;
     const char * bat_dir = BAT_DIR;
+    const char * energy_design = ENERGY_DESIGN;
     const char * energy_full = ENERGY_FULL;
     const char * energy_now = ENERGY_NOW;
     const char * power_supply_dir = POWER_SUPPLY_DIR;
 
-    // Count number of directors in power_supply that start with BAT
+    // Count number of directories in power_supply that start with BAT
     struct dirent * dp;
     DIR * dfd = opendir(power_supply_dir);
     if (dfd == NULL) {
@@ -30,6 +32,7 @@ BatteryFileManager * new_battery_file_manager() {
 
     // Initialize all string arrays of relevant energy files
     const size_t num_battery_dirs = sizeof(char*) * bfmanager->num_batteries;
+    bfmanager->energy_design_files = malloc(num_battery_dirs);
     bfmanager->energy_full_files = malloc(num_battery_dirs);
     bfmanager->energy_now_files = malloc(num_battery_dirs);
     dfd = opendir(power_supply_dir);
@@ -38,8 +41,11 @@ BatteryFileManager * new_battery_file_manager() {
         if (!starts_with(dp->d_name, bat_dir, 3)) {
             continue;
         }
+        bfmanager->energy_design_files[index] = malloc(file_memsize);
         bfmanager->energy_full_files[index] = malloc(file_memsize);
         bfmanager->energy_now_files[index] = malloc(file_memsize);
+        snprintf(bfmanager->energy_design_files[index], MAX_FILENAME_LEN,
+                 "%s/%s/%s", power_supply_dir, dp->d_name, energy_design);
         snprintf(bfmanager->energy_full_files[index], MAX_FILENAME_LEN,
                  "%s/%s/%s", power_supply_dir, dp->d_name, energy_full);
         snprintf(bfmanager->energy_now_files[index], MAX_FILENAME_LEN,
@@ -57,9 +63,11 @@ BatteryFileManager * new_battery_file_manager() {
 
 void del_battery_file_manager(BatteryFileManager * bfmanager) {
     for (size_t index = 0; index < bfmanager->num_batteries; index++) {
+        free(bfmanager->energy_design_files[index]);
         free(bfmanager->energy_full_files[index]);
         free(bfmanager->energy_now_files[index]);
     }
+    free(bfmanager->energy_design_files);
     free(bfmanager->energy_full_files);
     free(bfmanager->energy_now_files);
     free(bfmanager->ac_online_file);
@@ -77,12 +85,20 @@ short is_charging(BatteryFileManager * bfmanager) {
     return charging;
 };
 
+double bat_energy_design(BatteryFileManager * bfmanager) {
+    double energy = 0.0;
+    for (size_t index = 0; index < bfmanager->num_batteries; index++) {
+        energy += read_bat_file(bfmanager->energy_design_files[index]);
+    }
+    return small_float(energy) ? NO_HEALTH_INFO : energy;
+};
+
 double bat_energy_full(BatteryFileManager * bfmanager) {
     double energy = 0.0;
     for (size_t index = 0; index < bfmanager->num_batteries; index++) {
         energy += read_bat_file(bfmanager->energy_full_files[index]);
     }
-    return 0.0 <= energy ? energy : NO_BATTERY_INFO;
+    return small_float(energy) ? NO_ENERGY_INFO : energy;
 };
 
 double bat_energy_now(BatteryFileManager * bfmanager) {
@@ -90,13 +106,13 @@ double bat_energy_now(BatteryFileManager * bfmanager) {
     for (size_t index = 0; index < bfmanager->num_batteries; index++) {
         energy += read_bat_file(bfmanager->energy_now_files[index]);
     }
-    return 0.0 <= energy ? energy : NO_BATTERY_INFO;
+    return small_float(energy) ? NO_ENERGY_INFO : energy;
 };
 
 double read_bat_file(char * fname) {
     FILE* bat_file = fopen(fname, "r");
     if (bat_file == NULL) {
-        return NO_BATTERY_INFO;
+        return NO_ENERGY_INFO;
     }
     double bat_stat;
     fscanf(bat_file, "%lf", &bat_stat);
