@@ -3,8 +3,10 @@
 #include <stdlib.h>
 
 #include "battery_tracker.h"
+#include "common.h"
 
-const char * icons[] = {"", "", "", "", "", ""};
+const char * charging_icon = "";
+const char * icons[] = {"", "", "", "", ""};
 
 BatteryTracker * new_tracker() {
     BatteryTracker * tracker = malloc(sizeof(BatteryTracker));
@@ -37,8 +39,6 @@ void update_tracker(BatteryTracker * tracker) {
     progress_avg(tracker->exp_moving_avg, new_uptime, tracker->energy_now);
 };
 
-// Changes the display mode and refreshes the data that doesn't need to be
-// changed very often
 void rotate_display_mode(BatteryTracker * tracker) {
     tracker->energy_full = bat_energy_full(tracker->bfmanager);
     tracker->battery_health = 100.0 * tracker->energy_full \
@@ -64,7 +64,6 @@ double seconds_until_end(BatteryTracker * tracker) {
     return time_remaining(tracker->exp_moving_avg, goal_amount);
 };
 
-// Prints battery icon and percent remaining
 void print_battery_percent(BatteryTracker * tracker) {
     const double remaining_percent = battery_percent(tracker);
     if (remaining_percent == NO_ENERGY_INFO) {
@@ -75,7 +74,6 @@ void print_battery_percent(BatteryTracker * tracker) {
     printf("%s %.1lf%%\n", icon, remaining_percent);
 };
 
-// Prints a float of seconds as hours and minutes
 void print_time_left(BatteryTracker * tracker) {
     const double time_left = seconds_until_end(tracker);
     if (time_left == TIME_UNAVAILABLE) {
@@ -118,7 +116,7 @@ void print_info(BatteryTracker * tracker) {
 
 const char * get_icon(short charging_state, double percent_left) {
     if (charging_state) {
-        return icons[BATTERY_CHARGING];
+        return charging_icon;
     } else if (percent_left < 10.0) {
         return icons[BATTERY_EMPTY];
     } else if (percent_left < 35.0) {
