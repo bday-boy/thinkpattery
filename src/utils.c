@@ -13,3 +13,7 @@ struct timespec decimal_to_timespec(double time_amount) {
 
     return tim;
 };
+
+unsigned short starts_with(char * str, const char * prefix, size_t length) {
+    return strncmp(str, prefix, length) == 0;
+};
