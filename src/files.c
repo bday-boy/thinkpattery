@@ -13,6 +13,7 @@ BatteryFileManager * new_battery_file_manager() {
     const size_t file_memsize = sizeof(char) * MAX_FILENAME_LEN;
     const char * ac_dir = AC_DIR;
     const char * bat_dir = BAT_DIR;
+    const char * ac_online_file = AC_ONLINE_FILE;
     const char * energy_design = ENERGY_DESIGN;
     const char * energy_full = ENERGY_FULL;
     const char * energy_now = ENERGY_NOW;
@@ -55,8 +56,8 @@ BatteryFileManager * new_battery_file_manager() {
     closedir(dfd);
 
     bfmanager->ac_online_file = malloc(file_memsize);
-    snprintf(bfmanager->ac_online_file, MAX_FILENAME_LEN, "%s/%s",
-             power_supply_dir, ac_dir);
+    snprintf(bfmanager->ac_online_file, MAX_FILENAME_LEN, "%s/%s/%s",
+             power_supply_dir, ac_dir, ac_online_file);
 
     return bfmanager;
 };

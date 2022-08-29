@@ -5,6 +5,7 @@
 #define POWER_SUPPLY_DIR "/sys/class/power_supply"
 #define AC_DIR "AC"
 #define BAT_DIR "BAT"
+#define AC_ONLINE_FILE "online"
 #define ENERGY_DESIGN "energy_full_design"
 #define ENERGY_FULL "energy_full"
 #define ENERGY_NOW "energy_now"
