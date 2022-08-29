@@ -34,8 +34,8 @@ void progress_avg(ExponentialMovingAverage * exp_moving_avg,
     double speed = rise / run;
 
     // Speed is in battery energy per second
-    if (exp_moving_avg->num_samples < INITIAL_LENGTH) {
-        exp_moving_avg->speed += speed / INITIAL_LENGTH;
+    if (exp_moving_avg->num_samples < NUM_INITIAL_SAMPLES) {
+        exp_moving_avg->speed += speed / NUM_INITIAL_SAMPLES;
         exp_moving_avg->num_samples++;
     } else {
         exp_moving_avg->speed = (exp_moving_avg->alpha * speed) \
@@ -53,5 +53,5 @@ double time_remaining(ExponentialMovingAverage * exp_moving_avg,
         return TIME_UNAVAILABLE;
     }
 
-    return fabs(goal_amount / exp_moving_avg->speed);
+    return fabs((goal_amount - exp_moving_avg->sample) / exp_moving_avg->speed);
 };

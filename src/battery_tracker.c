@@ -83,8 +83,7 @@ double battery_percent(BatteryTracker * tracker) {
 double seconds_until_end(BatteryTracker * tracker) {
     // When laptop is charging, we want to know the remaining seconds until
     // full. When it's discharging, we want to know when it reaches 0.
-    double goal_amount = fabs(tracker->energy_now
-        - tracker->energy_full * tracker->is_charging);
+    double goal_amount = tracker->energy_full * tracker->is_charging;
     return time_remaining(tracker->exp_moving_avg, goal_amount);
 };
 
