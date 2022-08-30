@@ -4,16 +4,6 @@
 #include "files.h"          // For BatteryFileManager
 #include "moving_average.h" // For ExponentialMovingAverage
 
-extern const char * charging_icon;
-extern const char * percent_icons[];
-extern const char * time_icon;
-extern const char * health_icon_good;
-extern const char * health_icon_bad;
-
-extern const char * percent_format;
-extern const char * time_format;
-extern const char * health_format;
-
 typedef enum output_modes_t {
     PERCENT_MODE = 0,
     REMAINING_TIME_MODE,
@@ -49,8 +39,8 @@ typedef struct BatteryTracker {
 
     // Info display variables
     double print_variable;
-    char * icon;
-    char * print_format;
+    const char * icon;
+    const char * print_format;
     output_modes_t mode;
     output_modes_t prev_mode;
 
@@ -69,7 +59,7 @@ void update_tracker(BatteryTracker * tracker);
 void rotate_display_mode(BatteryTracker * tracker);
 
 // Used for avoiding unnecessary printing when nothing has changed
-double no_state_change(BatteryTracker * tracker, double new_state_value);
+unsigned short no_state_change(BatteryTracker * tracker);
 
 // Divides total current energy by total energy when full and multiplies by
 // 100.0.

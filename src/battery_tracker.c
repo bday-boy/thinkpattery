@@ -22,7 +22,7 @@ BatteryTracker * new_tracker() {
 
     tracker->energy_full = bat_energy_full(tracker->bfmanager);
     tracker->energy_now = bat_energy_now(tracker->bfmanager);
-    tracker->battery_health = 100.0 * tracker->energy_full \
+    tracker->battery_health = 100.0 * tracker->energy_full
         / bat_energy_design(tracker->bfmanager);
     tracker->is_charging = is_charging(tracker->bfmanager);
     tracker->prev_state_value = -1.0;
@@ -57,17 +57,17 @@ void rotate_display_mode(BatteryTracker * tracker) {
     // First, update health, since it doesn't need to be updated each program
     // loop but should be updated before it displays
     tracker->energy_full = bat_energy_full(tracker->bfmanager);
-    tracker->battery_health = 100.0 * tracker->energy_full \
+    tracker->battery_health = 100.0 * tracker->energy_full
         / bat_energy_design(tracker->bfmanager);
 
     tracker->mode = (tracker->mode + 1) % TOTAL_MODES;
 };
 
-double no_state_change(BatteryTracker * tracker, double new_state_value) {
+unsigned short no_state_change(BatteryTracker * tracker) {
     // We should indicate no state change only if the display mode is the same
     // and the prev_state_value is very close to the new_state_value
-    return (tracker->mode == tracker->prev_mode) \
-        && (small_float(tracker->prev_state_value - new_state_value));
+    return (tracker->mode == tracker->prev_mode)
+        && (small_float(tracker->prev_state_value - tracker->print_variable));
 };
 
 double battery_percent(BatteryTracker * tracker) {
@@ -140,7 +140,7 @@ void print_info(BatteryTracker * tracker) {
             printf("Unknown mode\n");
             return;
     };
-    if (no_state_change(tracker, tracker->print_variable)) {
+    if (no_state_change(tracker)) {
         return;
     }
     printf(tracker->print_format, tracker->icon, tracker->print_variable);

@@ -6,18 +6,19 @@
 #include "files.h"
 #include "utils.h"
 
+const char * ac_dir = AC_DIR;
+const char * bat_dir = BAT_DIR;
+const char * ac_online_file = AC_ONLINE_FILE;
+const char * energy_design = ENERGY_DESIGN;
+const char * energy_full = ENERGY_FULL;
+const char * energy_now = ENERGY_NOW;
+const char * power_supply_dir = POWER_SUPPLY_DIR;
+
 BatteryFileManager * new_battery_file_manager() {
     BatteryFileManager * bfmanager = malloc(sizeof(BatteryFileManager));
     bfmanager->num_batteries = 0;
 
     const size_t file_memsize = sizeof(char) * MAX_FILENAME_LEN;
-    const char * ac_dir = AC_DIR;
-    const char * bat_dir = BAT_DIR;
-    const char * ac_online_file = AC_ONLINE_FILE;
-    const char * energy_design = ENERGY_DESIGN;
-    const char * energy_full = ENERGY_FULL;
-    const char * energy_now = ENERGY_NOW;
-    const char * power_supply_dir = POWER_SUPPLY_DIR;
 
     // Count number of directories in power_supply that start with BAT
     struct dirent * dp;

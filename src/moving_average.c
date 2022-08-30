@@ -6,7 +6,7 @@
 
 ExponentialMovingAverage * new_exp_moving_average(double initial_time,
                                                   double initial_sample) {
-    ExponentialMovingAverage * exp_moving_avg = \
+    ExponentialMovingAverage * exp_moving_avg =
         malloc(sizeof(ExponentialMovingAverage));
 
     exp_moving_avg->alpha = ALPHA;
@@ -38,7 +38,7 @@ void progress_avg(ExponentialMovingAverage * exp_moving_avg,
         exp_moving_avg->speed += speed / NUM_INITIAL_SAMPLES;
         exp_moving_avg->num_samples++;
     } else {
-        exp_moving_avg->speed = (exp_moving_avg->alpha * speed) \
+        exp_moving_avg->speed = (exp_moving_avg->alpha * speed)
             + ((1 - exp_moving_avg->alpha) * exp_moving_avg->speed);
     }
 
