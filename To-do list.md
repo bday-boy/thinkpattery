@@ -1,6 +1,6 @@
 # To-do List
 
-## Short term:
+## Short term
 
 - Clean up code a bit
 - Make sure values for errors (NO_HEALTH_INFO, TIME_UNAVAILABLE, etc.) make
@@ -8,8 +8,23 @@
 - Test more alpha values
 - Actually double check memory leaks and shit
 - Add error logging
+- Add config through Polybar env variables
+  - Icons for:
+    - Charging
+      - Charging
+      - Not charging
+    - Battery health
+      - Low threshold battery
+      - High threshold battery
+      - Any number of middle icons
+    - Time left
+  - Print formatting (possibly)
+  - Sample frequency
+  - Number of initial samples
+  - Moving average alpha value
+  - Min and max battery icon thresholds
 
-## Long term:
+## Long term
 
 - Use multithreading to use different refresh rates for the battery percent
   checking and battery life remaining.
