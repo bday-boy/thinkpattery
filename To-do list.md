@@ -2,13 +2,9 @@
 
 ## Short term
 
-- Clean up code a bit
-- Make sure values for errors (NO_HEALTH_INFO, TIME_UNAVAILABLE, etc.) make
-  sense
-- Test more alpha values
-- Actually double check memory leaks and shit
-- Add error logging
-- Add config through Polybar env variables
+### Additional functionality
+
+- Add config through Polybar 3.6.0 env variables
   - Icons for:
     - Charging
       - Charging
@@ -23,13 +19,25 @@
   - Number of initial samples
   - Moving average alpha value
   - Min and max battery icon thresholds
+- Add error logging
+
+### Code cleanup
+
+- Find a better way to use global values because I hate macros (maybe extern
+  some consts)
+
+### Miscellaneous checks
+
+- Make sure values for errors (NO_HEALTH_INFO, TIME_UNAVAILABLE, etc.) make
+  sense
+- Test more alpha values
+- Actually double check memory leaks and shit
 
 ## Long term
 
-- Use multithreading to use different refresh rates for the battery percent
-  checking and battery life remaining.
 - Use udev events to send signals to the program rather than just looping to
   check BAT files periodically
+  - Turns out this might not work?
 
 ## Done :)
 
