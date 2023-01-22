@@ -25,6 +25,7 @@
 
 - Find a better way to use global values because I hate macros (maybe extern
   some consts)
+- Find less ugly way of checking if any state change occured
 
 ### Miscellaneous checks
 
