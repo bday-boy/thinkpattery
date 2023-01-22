@@ -24,7 +24,7 @@ BatteryTracker * new_tracker() {
     tracker->energy_now = bat_energy_now(tracker->bfmanager);
     tracker->battery_health = 100.0 * tracker->energy_full
         / bat_energy_design(tracker->bfmanager);
-    tracker->is_charging = is_charging(tracker->bfmanager);
+    tracker->is_charging = bat_is_charging(tracker->bfmanager);
     tracker->prev_state_value = -1.0;
 
     tracker->icon = percent_icons[0];
@@ -33,7 +33,7 @@ BatteryTracker * new_tracker() {
     tracker->mode = PERCENT_MODE;
     tracker->prev_mode = PERCENT_MODE;
 
-    tracker->exp_moving_avg = new_exp_moving_average(system_uptime(),
+    tracker->exp_moving_avg = new_exp_moving_average(system_uptime_in_seconds(),
                                                      tracker->energy_now);
 
     return tracker;
@@ -48,8 +48,8 @@ void del_tracker(BatteryTracker * tracker) {
 void update_tracker(BatteryTracker * tracker) {
     // Update mean energy using simple moving average method
     tracker->energy_now = bat_energy_now(tracker->bfmanager);
-    tracker->is_charging = is_charging(tracker->bfmanager);
-    double new_uptime = system_uptime();
+    tracker->is_charging = bat_is_charging(tracker->bfmanager);
+    double new_uptime = system_uptime_in_seconds();
     progress_avg(tracker->exp_moving_avg, new_uptime, tracker->energy_now);
 };
 
@@ -144,8 +144,8 @@ void print_info(BatteryTracker * tracker) {
     tracker->prev_state_value = tracker->print_variable;
 };
 
-const char * get_percent_icon(short charging_state, double percent_left) {
-    if (charging_state) {
+const char * get_percent_icon(short is_charging, double percent_left) {
+    if (is_charging) {
         return charging_icon;
     } else if (percent_left < 10.0) {
         return percent_icons[BATTERY_EMPTY];

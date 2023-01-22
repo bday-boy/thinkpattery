@@ -26,7 +26,7 @@ typedef enum battery_percent_icons_t {
     TOTAL_ICONS
 } battery_percent_icons_t;
 
-typedef struct BatteryTracker {    
+typedef struct BatteryTracker {
     // Reads data from AC file BATX files in the /sys/class/power_supply dir
     BatteryFileManager * bfmanager;
 

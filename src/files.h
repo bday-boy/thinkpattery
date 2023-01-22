@@ -29,16 +29,18 @@ BatteryFileManager * new_battery_file_manager();
 void del_battery_file_manager(BatteryFileManager * bfmanager);
 
 // Checks if the AC adapter is connected
-short is_charging(BatteryFileManager * bfmanager);
+short bat_is_charging(BatteryFileManager * bfmanager);
 
 double bat_energy_design(BatteryFileManager * bfmanager);
 double bat_energy_full(BatteryFileManager * bfmanager);
 double bat_energy_now(BatteryFileManager * bfmanager);
 
-// So I don't need to re-use code
-double read_bat_file(char * fname);
+// Gets the first value in /proc/uptime
+double system_uptime_in_seconds();
 
-// Checks system uptime as a double
-double system_uptime();
+// All battery info files are formatted as a single float followed by either
+// nothing or garbage info, so this function just reads the first float as a
+// double
+double read_first_double(char * fname, double value_when_no_file);
 
 #endif // FILES_H_

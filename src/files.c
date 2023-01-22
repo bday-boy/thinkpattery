@@ -7,6 +7,7 @@
 #include "common.h"
 #include "files.h"
 
+const char * uptime_file = UPTIME_FILE;
 const char * ac_dir = AC_DIR;
 const char * bat_dir = BAT_DIR;
 const char * ac_online_file = AC_ONLINE_FILE;
@@ -84,21 +85,22 @@ void del_battery_file_manager(BatteryFileManager * bfmanager) {
     free(bfmanager);
 };
 
-short is_charging(BatteryFileManager * bfmanager) {
+short bat_is_charging(BatteryFileManager * bfmanager) {
     FILE* ac_online_file = fopen(bfmanager->ac_online_file, "r");
     if (ac_online_file == NULL) {
         return NO_CHARGING_INFO;
     }
-    short charging;
-    fscanf(ac_online_file, "%hd", &charging);
+    short is_charging;
+    fscanf(ac_online_file, "%hd", &is_charging);
     fclose(ac_online_file);
-    return charging;
+    return is_charging;
 };
 
 double bat_energy_design(BatteryFileManager * bfmanager) {
     double energy = 0.0;
     for (size_t index = 0; index < bfmanager->num_batteries; index++) {
-        energy += read_bat_file(bfmanager->energy_design_files[index]);
+        energy += read_first_double(bfmanager->energy_design_files[index],
+                                   NO_ENERGY_INFO);
     }
     return small_float(energy) ? NO_HEALTH_INFO : energy;
 };
@@ -106,7 +108,8 @@ double bat_energy_design(BatteryFileManager * bfmanager) {
 double bat_energy_full(BatteryFileManager * bfmanager) {
     double energy = 0.0;
     for (size_t index = 0; index < bfmanager->num_batteries; index++) {
-        energy += read_bat_file(bfmanager->energy_full_files[index]);
+        energy += read_first_double(bfmanager->energy_full_files[index],
+                                   NO_ENERGY_INFO);
     }
     return small_float(energy) ? NO_ENERGY_INFO : energy;
 };
@@ -114,29 +117,23 @@ double bat_energy_full(BatteryFileManager * bfmanager) {
 double bat_energy_now(BatteryFileManager * bfmanager) {
     double energy = 0.0;
     for (size_t index = 0; index < bfmanager->num_batteries; index++) {
-        energy += read_bat_file(bfmanager->energy_now_files[index]);
+        energy += read_first_double(bfmanager->energy_now_files[index],
+                                   NO_ENERGY_INFO);
     }
     return small_float(energy) ? NO_ENERGY_INFO : energy;
 };
 
-double read_bat_file(char * fname) {
-    FILE* bat_file = fopen(fname, "r");
-    if (bat_file == NULL) {
-        return NO_ENERGY_INFO;
-    }
-    double bat_stat;
-    fscanf(bat_file, "%lf", &bat_stat);
-    fclose(bat_file);
-    return bat_stat;
+double system_uptime_in_seconds() {
+    return read_first_double(UPTIME_FILE, NO_UPTIME);
 };
 
-double system_uptime() {
-    FILE* uptime_file = fopen(UPTIME_FILE, "r");
-    if (uptime_file == NULL) {
-        return NO_UPTIME;
+double read_first_double(char * fname, double value_when_no_file) {
+    FILE* file = fopen(fname, "r");
+    if (file == NULL) {
+        return value_when_no_file;
     }
-    double uptime;
-    fscanf(uptime_file, "%lf", &uptime);
-    fclose(uptime_file);
-    return uptime;
+    double bat_stat;
+    fscanf(file, "%lf", &bat_stat);
+    fclose(file);
+    return bat_stat;
 };
