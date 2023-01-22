@@ -71,10 +71,7 @@ unsigned short no_state_change(BatteryTracker * tracker) {
 };
 
 double battery_percent(BatteryTracker * tracker) {
-    if (
-        -FLOAT_THRESHOLD < tracker->energy_full
-        && tracker->energy_full < FLOAT_THRESHOLD
-    ) {
+    if (small_float(tracker->energy_full)) {
         return NO_ENERGY_INFO;
     }
     return 100.0 * (tracker->energy_now / tracker->energy_full);
@@ -113,7 +110,7 @@ void load_time_left(BatteryTracker * tracker) {
 
 void load_battery_health(BatteryTracker * tracker) {
     tracker->print_format = health_format;
-    if (tracker->battery_health <= FLOAT_THRESHOLD) {
+    if (small_float(tracker->battery_health)) {
         tracker->print_variable = NO_HEALTH_INFO;
         tracker->icon = percent_icons[0];
         return;
