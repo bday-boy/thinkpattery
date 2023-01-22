@@ -72,7 +72,7 @@ unsigned short no_state_change(BatteryTracker * tracker) {
 
 double battery_percent(BatteryTracker * tracker) {
     if (small_float(tracker->energy_full)) {
-        return NO_ENERGY_INFO;
+        return NO_INFO;
     }
     return 100.0 * (tracker->energy_now / tracker->energy_full);
 };
@@ -87,7 +87,7 @@ double seconds_until_end(BatteryTracker * tracker) {
 void load_battery_percent(BatteryTracker * tracker) {
     tracker->print_format = percent_format;
     const double remaining_percent = battery_percent(tracker);
-    if (remaining_percent == NO_ENERGY_INFO) {
+    if (remaining_percent == NO_INFO) {
         tracker->print_variable = remaining_percent;
         tracker->icon = percent_icons[0];
         return;
@@ -111,7 +111,7 @@ void load_time_left(BatteryTracker * tracker) {
 void load_battery_health(BatteryTracker * tracker) {
     tracker->print_format = health_format;
     if (small_float(tracker->battery_health)) {
-        tracker->print_variable = NO_HEALTH_INFO;
+        tracker->print_variable = NO_INFO;
         tracker->icon = percent_icons[0];
         return;
     }

@@ -10,10 +10,7 @@
 #define ENERGY_FULL "energy_full"
 #define ENERGY_NOW "energy_now"
 
-#define NO_UPTIME -1.0
-#define NO_CHARGING_INFO -1
-#define NO_ENERGY_INFO 0.0
-#define NO_HEALTH_INFO -1.0
+#define NO_INFO -1
 #define MAX_FILENAME_LEN 1024
 
 typedef struct BatteryFileManager {
@@ -41,6 +38,6 @@ double system_uptime_in_seconds();
 // All battery info files are formatted as a single float followed by either
 // nothing or garbage info, so this function just reads the first float as a
 // double
-double read_first_double(char * fname, double value_when_no_file);
+double read_first_double(char * fname);
 
 #endif // FILES_H_
