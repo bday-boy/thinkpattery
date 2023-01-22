@@ -1,10 +1,11 @@
 #include <dirent.h> // For struct dirent, DIR, readdir(), closedir()
+#include <stddef.h> // For size_t
 #include <stdio.h>  // For fscanf()
 #include <stdlib.h> // For malloc()
+#include <string.h> // For strncmp()
 
 #include "common.h"
 #include "files.h"
-#include "utils.h"
 
 const char * ac_dir = AC_DIR;
 const char * bat_dir = BAT_DIR;
@@ -13,6 +14,13 @@ const char * energy_design = ENERGY_DESIGN;
 const char * energy_full = ENERGY_FULL;
 const char * energy_now = ENERGY_NOW;
 const char * power_supply_dir = POWER_SUPPLY_DIR;
+
+// Checks if a string has a given prefix. Only compares prefix_length number of
+// characters.
+unsigned short starts_with(char * str_to_check, const char * prefix,
+                           size_t prefix_length) {
+    return strncmp(str_to_check, prefix, prefix_length) == 0;
+};
 
 BatteryFileManager * new_battery_file_manager() {
     BatteryFileManager * bfmanager = malloc(sizeof(BatteryFileManager));
