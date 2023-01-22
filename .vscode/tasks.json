@@ -34,7 +34,7 @@
                 "-g",
                 "${fileDirname}/test.c",
                 "${fileDirname}/files.c",
-                "${fileDirname}/utils.c",
+                "${fileDirname}/common.c",
                 "-o",
                 "${fileDirname}/${fileBasenameNoExtension}.out"
             ],

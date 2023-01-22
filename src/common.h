@@ -3,12 +3,11 @@
 
 // Doesn't need to be very low -- the energies shown in each BATX/energy
 // file usually only change every few seconds or so anyway.
-#define SAMPLE_FREQUENCY 0.5 // float in seconds
+extern const double SAMPLE_FREQUENCY;
 
 // Threshold for avoiding floats that are too small.
-#define FLOAT_THRESHOLD 0.0001
+extern const double FLOAT_THRESHOLD;
 
-// Macro for avoiding division by ridiculously small numbers.
-#define small_float(flt) (-FLOAT_THRESHOLD < (flt) && (flt) < FLOAT_THRESHOLD)
+unsigned short small_float(double flt);
 
 #endif
