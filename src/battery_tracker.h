@@ -1,8 +1,7 @@
 #ifndef BATTERY_TRACKER_H_
 #define BATTERY_TRACKER_H_
 
-#include "battery_info.h"
-#include "files.h"          // For BatteryFileManager
+#include "battery_info.h"   // For BatteryInfo
 #include "moving_average.h" // For ExponentialMovingAverage
 
 typedef enum output_modes_t {
