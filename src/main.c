@@ -19,14 +19,12 @@ void switch_mode(int signal_num) {
     rotate_display_mode(bat);
 };
 
-struct timespec * init_timespec(struct timespec * tim) {
+void init_timespec(struct timespec * tim) {
     double whole_seconds;
     double decimal_seconds = modf(SAMPLE_FREQUENCY, &whole_seconds);
 
     tim->tv_sec = (time_t) whole_seconds;
     tim->tv_nsec = (long int) (decimal_seconds * 1000000000.0);
-
-    return tim;
 };
 
 int main() {
