@@ -17,86 +17,74 @@ const char * health_format = "%s %.1lf%%\n";
 BatteryTracker * new_tracker() {
     BatteryTracker * tracker = malloc(sizeof(BatteryTracker));
 
-    tracker->bfmanager = new_battery_file_manager();
-
-    tracker->energy_full = bat_energy_full(tracker->bfmanager);
-    tracker->energy_now = bat_energy_now(tracker->bfmanager);
-    tracker->battery_health = 100.0 * tracker->energy_full
-        / bat_energy_design(tracker->bfmanager);
-    tracker->is_charging = bat_is_charging(tracker->bfmanager);
-    tracker->prev_state_value = -1.0;
+    tracker->bat_info = new_bat_info();
 
     tracker->icon = percent_icons[0];
     tracker->print_variable = -1.0;
     tracker->print_format = percent_format;
     tracker->mode = PERCENT_MODE;
-    tracker->prev_mode = PERCENT_MODE;
+    tracker->changed_mode = 0;
 
-    tracker->exp_moving_avg = new_exp_moving_average(system_uptime_in_seconds(),
-                                                     tracker->energy_now);
+    tracker->exp_moving_avg = new_exp_moving_average(
+        system_uptime_in_seconds(), tracker->bat_info->energy_now
+    );
 
     return tracker;
 };
 
 void del_tracker(BatteryTracker * tracker) {
-    del_battery_file_manager(tracker->bfmanager);
+    del_battery_info(tracker->bat_info);
     del_exp_moving_average(tracker->exp_moving_avg);
     free(tracker);
 };
 
 void update_tracker(BatteryTracker * tracker) {
     // Update mean energy using simple moving average method
-    tracker->energy_now = bat_energy_now(tracker->bfmanager);
-    tracker->is_charging = bat_is_charging(tracker->bfmanager);
-    double new_uptime = system_uptime_in_seconds();
-    progress_avg(tracker->exp_moving_avg, new_uptime, tracker->energy_now);
+    update_info(tracker->bat_info);
+    progress_avg(tracker->exp_moving_avg, system_uptime_in_seconds(),
+                 tracker->bat_info->energy_now);
 };
 
 void rotate_display_mode(BatteryTracker * tracker) {
-    // First, update health, since it doesn't need to be updated each program
-    // loop but should be updated before it displays
-    tracker->energy_full = bat_energy_full(tracker->bfmanager);
-    tracker->battery_health = 100.0 * tracker->energy_full
-        / bat_energy_design(tracker->bfmanager);
-
     tracker->mode = (tracker->mode + 1) % TOTAL_MODES;
-};
-
-unsigned short no_state_change(BatteryTracker * tracker) {
-    // We should indicate no state change only if the display mode is the same
-    // and the prev_state_value is very close to the new_state_value
-    return (tracker->mode == tracker->prev_mode)
-        && (small_float(tracker->prev_state_value - tracker->print_variable));
-};
-
-double battery_percent(BatteryTracker * tracker) {
-    if (small_float(tracker->energy_full)) {
-        return NO_INFO;
-    }
-    return 100.0 * (tracker->energy_now / tracker->energy_full);
+    switch (tracker->mode) {
+        case PERCENT_MODE:
+            tracker->print_format = percent_format;
+            break;
+        case REMAINING_TIME_MODE:
+            tracker->print_format = time_format;
+            break;
+        case BATTERY_HEALTH_MODE:
+            tracker->print_format = health_format;
+            update_health(tracker->bat_info);
+            break;
+        default:
+            exit(EXIT_FAILURE);
+    };
+    tracker->changed_mode = 1;
 };
 
 double seconds_until_end(BatteryTracker * tracker) {
     // When laptop is charging, we want to know the remaining seconds until
     // full. When it's discharging, we want to know when it reaches 0.
-    double goal_amount = tracker->energy_full * tracker->is_charging;
+    double goal_amount = tracker->bat_info->energy_full
+        * tracker->bat_info->is_charging;
     return time_remaining(tracker->exp_moving_avg, goal_amount);
 };
 
 void load_battery_percent(BatteryTracker * tracker) {
-    tracker->print_format = percent_format;
-    const double remaining_percent = battery_percent(tracker);
-    if (remaining_percent == NO_INFO) {
+    const double remaining_percent = tracker->bat_info->percent_now;
+    if (remaining_percent < 0.0) {
         tracker->print_variable = remaining_percent;
         tracker->icon = percent_icons[0];
         return;
     }
-    tracker->icon = get_percent_icon(tracker->is_charging, remaining_percent);
+    tracker->icon = get_percent_icon(tracker->bat_info->is_charging,
+                                     remaining_percent);
     tracker->print_variable = remaining_percent;
 };
 
 void load_time_left(BatteryTracker * tracker) {
-    tracker->print_format = time_format;
     const double time_left = seconds_until_end(tracker);
     if (time_left == TIME_UNAVAILABLE) {
         tracker->print_variable = time_left;
@@ -108,20 +96,21 @@ void load_time_left(BatteryTracker * tracker) {
 };
 
 void load_battery_health(BatteryTracker * tracker) {
-    tracker->print_format = health_format;
-    if (small_float(tracker->battery_health)) {
+    if (tracker->bat_info->battery_health < 0.0) {
         tracker->print_variable = NO_INFO;
-        tracker->icon = percent_icons[0];
+        tracker->icon = health_icon_bad;
         return;
     }
-    tracker->icon = (tracker->battery_health > 60.0)
+    tracker->icon = (tracker->bat_info->battery_health > 60.0)
         ? health_icon_good
         : health_icon_bad;
-    tracker->print_variable = tracker->battery_health;
+    tracker->print_variable = tracker->bat_info->battery_health;
 };
 
 void print_info(BatteryTracker * tracker) {
-    tracker->prev_mode = tracker->mode;
+    if (!tracker->bat_info->state_changed && !tracker->changed_mode) {
+        return;
+    }
     switch (tracker->mode) {
         case PERCENT_MODE:
             load_battery_percent(tracker);
@@ -133,14 +122,10 @@ void print_info(BatteryTracker * tracker) {
             load_battery_health(tracker);
             break;
         default:
-            printf("Unknown mode\n");
-            return;
+            exit(EXIT_FAILURE);
     };
-    if (no_state_change(tracker)) {
-        return;
-    }
     printf(tracker->print_format, tracker->icon, tracker->print_variable);
-    tracker->prev_state_value = tracker->print_variable;
+    tracker->changed_mode = 0;
 };
 
 const char * get_percent_icon(short is_charging, double percent_left) {

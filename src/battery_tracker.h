@@ -1,6 +1,7 @@
 #ifndef BATTERY_TRACKER_H_
 #define BATTERY_TRACKER_H_
 
+#include "battery_info.h"
 #include "files.h"          // For BatteryFileManager
 #include "moving_average.h" // For ExponentialMovingAverage
 
@@ -27,22 +28,15 @@ typedef enum battery_percent_icons_t {
 } battery_percent_icons_t;
 
 typedef struct BatteryTracker {
-    // Reads data from AC file BATX files in the /sys/class/power_supply dir
-    BatteryFileManager * bfmanager;
-
-    // Battery state variables
-    double energy_full;
-    double energy_now;
-    double battery_health;
-    double prev_state_value;
-    short is_charging;
+    // Manages battery state info and gathering
+    BatteryInfo * bat_info;
 
     // Info display variables
     double print_variable;
     const char * icon;
     const char * print_format;
     output_modes_t mode;
-    output_modes_t prev_mode;
+    unsigned short changed_mode;
 
     // Used for predicting when battery will be dead/fully charged
     ExponentialMovingAverage * exp_moving_avg;
@@ -57,16 +51,6 @@ void update_tracker(BatteryTracker * tracker);
 // Changes the display mode and refreshes the data that doesn't need to be
 // changed very often.
 void rotate_display_mode(BatteryTracker * tracker);
-
-// Used for avoiding unnecessary printing when nothing has changed
-unsigned short no_state_change(BatteryTracker * tracker);
-
-// Divides total current energy by total energy when full and multiplies by
-// 100.0.
-double battery_percent(BatteryTracker * tracker);
-
-// Divides total energy when full by maximum total energy by design.
-double battery_health(BatteryTracker * tracker);
 
 // Gets number of seconds until reaching a certain energy value (usually 0 or
 // energy_full).
