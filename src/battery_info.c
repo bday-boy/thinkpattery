@@ -25,26 +25,23 @@ void del_battery_info(BatteryInfo * bat_info) {
     free(bat_info);
 };
 
-unsigned short update_info(BatteryInfo * bat_info) {
+void update_info(BatteryInfo * bat_info) {
     // Read new data from battery and AC files
     double energy_now = bat_energy_now(bat_info->bfmanager);
     short is_charging = bat_is_charging(bat_info->bfmanager);
 
     // State has changed when battery energy or charging state is different
     // from the previous value
-    unsigned short battery_state_changed = (
+    bat_info->state_changed = (
         energy_now != bat_info->energy_now
         || is_charging != bat_info->is_charging
     );
 
-    if (battery_state_changed) {
+    if (bat_info->state_changed) {
         bat_info->energy_now = energy_now;
         bat_info->is_charging = is_charging;
         update_percent(bat_info);
     }
-
-    bat_info->state_changed = battery_state_changed;
-    return battery_state_changed;
 };
 
 void update_percent(BatteryInfo * bat_info) {
