@@ -54,18 +54,13 @@ void update_percent(BatteryInfo * bat_info) {
 };
 
 void update_health(BatteryInfo * bat_info) {
+    bat_info->energy_full = bat_energy_full(bat_info->bfmanager);
+    bat_info->energy_design = bat_energy_design(bat_info->bfmanager);
+
     if (bat_info->energy_full > 0.0 && bat_info->energy_design > 0.0) {
         bat_info->battery_health = 100.0
             * (bat_info->energy_full / bat_info->energy_design);
     } else {
         bat_info->battery_health = NO_INFO;
     }
-};
-
-double get_bat_health(BatteryInfo * bat_info) {
-    // Make sure we got meaningful data from battery info files
-    if (bat_info->energy_full < 0.0 || bat_info->energy_design < 0.0) {
-        return NO_INFO;
-    }
-    return 100.0 * (bat_info->energy_full / bat_info->energy_design);
 };

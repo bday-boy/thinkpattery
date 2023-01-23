@@ -28,6 +28,4 @@ void update_info(BatteryInfo * bat_info);
 void update_percent(BatteryInfo * bat_info);
 void update_health(BatteryInfo * bat_info);
 
-double get_bat_health(BatteryInfo * bat_info);
-
 #endif // BATTERY_INFO_H_
