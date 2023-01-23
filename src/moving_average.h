@@ -35,4 +35,6 @@ void progress_avg(ExponentialMovingAverage * exp_moving_avg,
 double time_remaining(ExponentialMovingAverage * exp_moving_avg,
                       double goal_amount);
 
+unsigned short small_float(double flt);
+
 #endif // MOVING_AVERAGE_H_

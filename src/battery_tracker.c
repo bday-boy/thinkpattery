@@ -3,7 +3,6 @@
 #include <stdlib.h>
 
 #include "battery_tracker.h"
-#include "common.h"
 
 const char * charging_icon = "";
 const char * percent_icons[] = {"", "", "", "", ""};

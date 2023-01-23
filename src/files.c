@@ -4,7 +4,6 @@
 #include <stdlib.h> // For malloc(), free()
 #include <string.h> // For strncmp()
 
-#include "common.h"
 #include "files.h"
 
 const char * uptime_file = UPTIME_FILE;

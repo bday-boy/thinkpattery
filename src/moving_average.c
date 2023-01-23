@@ -1,7 +1,6 @@
 #include <math.h>
 #include <stdlib.h>
 
-#include "common.h"
 #include "moving_average.h"
 
 ExponentialMovingAverage * new_exp_moving_average(double initial_time,
@@ -54,4 +53,8 @@ double time_remaining(ExponentialMovingAverage * exp_moving_avg,
     }
 
     return fabs((goal_amount - exp_moving_avg->sample) / exp_moving_avg->speed);
+};
+
+unsigned short small_float(double flt) {
+    return (-0.0001 < flt) && (flt < 0.0001);
 };

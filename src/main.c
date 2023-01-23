@@ -4,7 +4,6 @@
 #include <time.h>   // For nanosleep(), timespec
 
 #include "battery_tracker.h"
-#include "common.h"
 
 BatteryTracker * bat;
 
