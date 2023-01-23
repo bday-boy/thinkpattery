@@ -7,7 +7,10 @@
 #include "common.h"
 
 BatteryTracker * bat;
-const double SAMPLE_FREQUENCY = 0.5;
+
+// Battery info doesn't change that often so we really don't need to sample
+// that much
+const double SAMPLE_FREQUENCY = 1.0;
 
 // Changes printing mode between percent and time left
 void switch_mode(int signal_num) {
