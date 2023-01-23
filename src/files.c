@@ -88,7 +88,6 @@ void del_battery_file_manager(BatteryFileManager * bfmanager) {
 short bat_is_charging(BatteryFileManager * bfmanager) {
     FILE* ac_online_file = fopen(bfmanager->ac_online_file, "r");
     if (ac_online_file == NULL) {
-        fclose(ac_online_file);
         return NO_INFO;
     }
     short is_charging;
@@ -128,7 +127,6 @@ double system_uptime_in_seconds() {
 double read_first_double(char * fname) {
     FILE* file = fopen(fname, "r");
     if (file == NULL) {
-        fclose(file);
         return NO_INFO;
     }
     double bat_stat;
