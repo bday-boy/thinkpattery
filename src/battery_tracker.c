@@ -41,8 +41,10 @@ void del_tracker(BatteryTracker * tracker) {
 void update_tracker(BatteryTracker * tracker) {
     // Update mean energy using simple moving average method
     update_info(tracker->bat_info);
-    progress_avg(tracker->exp_moving_avg, system_uptime_in_seconds(),
-                 tracker->bat_info->energy_now);
+    if (tracker->bat_info->state_changed) {
+        progress_avg(tracker->exp_moving_avg, system_uptime_in_seconds(),
+                    tracker->bat_info->energy_now);
+    }
 };
 
 void rotate_display_mode(BatteryTracker * tracker) {
