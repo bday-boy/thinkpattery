@@ -6,8 +6,10 @@
 #include <time.h>       // For nanosleep(), timespec
 
 #include "battery_tracker.h"
+#include "config.h"
 
 BatteryTracker * bat;
+PolybarConfig * config;
 
 // Battery info doesn't change that often so we really don't need to sample
 // that much
