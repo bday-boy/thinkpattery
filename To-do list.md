@@ -25,6 +25,10 @@
 - Find a better way to use global values because I hate macros (maybe extern
   some consts)
 - Find less ugly way of checking if any state change occured
+- Implement dependency injection or even avoid using struct pointers altogether
+  in favor of using basic type pointers (i.e. keeping pointers for battery
+  health and percent in the BatteryTracker struct rather than a pointer to
+  the BatteryInfo struct itself)
 
 ### Miscellaneous checks
 
