@@ -12,7 +12,8 @@ BatteryInfo * new_bat_info() {
     bat_info->energy_design = bat_energy_design(bat_info->bfmanager);
     bat_info->is_charging = bat_is_charging(bat_info->bfmanager);
 
-    update_percent(bat_info);
+    bat_info->moving_avg = new_exp_moving_average(bat_info->energy_now);
+
     update_health(bat_info);
 
     bat_info->state_changed = 0;
@@ -22,6 +23,7 @@ BatteryInfo * new_bat_info() {
 
 void del_battery_info(BatteryInfo * bat_info) {
     del_battery_file_manager(bat_info->bfmanager);
+    del_exp_moving_average(bat_info->moving_avg);
     free(bat_info);
 };
 
@@ -41,6 +43,7 @@ void update_info(BatteryInfo * bat_info) {
         bat_info->energy_now = energy_now;
         bat_info->is_charging = is_charging;
         update_percent(bat_info);
+        progress_avg(bat_info->moving_avg, energy_now);
     }
 };
 

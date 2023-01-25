@@ -36,9 +36,6 @@ typedef struct BatteryTracker {
     const char * print_format;
     output_modes_t mode;
     unsigned short changed_mode;
-
-    // Used for predicting when battery will be dead/fully charged
-    ExponentialMovingAverage * exp_moving_avg;
 } BatteryTracker;
 
 BatteryTracker * new_tracker();

@@ -2,15 +2,15 @@
 #include <stdlib.h>
 
 #include "moving_average.h"
+#include "files.h"
 
-ExponentialMovingAverage * new_exp_moving_average(double initial_time,
-                                                  double initial_sample) {
+ExponentialMovingAverage * new_exp_moving_average(double initial_sample) {
     ExponentialMovingAverage * exp_moving_avg =
         malloc(sizeof(ExponentialMovingAverage));
 
     exp_moving_avg->alpha = ALPHA;
     exp_moving_avg->speed = 0.0;
-    exp_moving_avg->time = initial_time;
+    exp_moving_avg->time = system_uptime_in_seconds();
     exp_moving_avg->sample = initial_sample;
     exp_moving_avg->num_samples = 0;
 
@@ -21,12 +21,13 @@ void del_exp_moving_average(ExponentialMovingAverage * exp_moving_avg) {
     free(exp_moving_avg);
 };
 
-void progress_avg(ExponentialMovingAverage * exp_moving_avg,
-                  double new_time, double new_sample) {
+void progress_avg(ExponentialMovingAverage * exp_moving_avg, double new_sample) {
     // Ignore when the new sample is the same as the last one
     if (exp_moving_avg->sample == new_sample) {
         return;
     }
+
+    double new_time = system_uptime_in_seconds();
 
     double run = new_time - exp_moving_avg->time;
     double rise = new_sample - exp_moving_avg->sample;

@@ -25,26 +25,17 @@ BatteryTracker * new_tracker() {
     tracker->mode = PERCENT_MODE;
     tracker->changed_mode = 0;
 
-    tracker->exp_moving_avg = new_exp_moving_average(
-        system_uptime_in_seconds(), tracker->bat_info->energy_now
-    );
-
     return tracker;
 };
 
 void del_tracker(BatteryTracker * tracker) {
     del_battery_info(tracker->bat_info);
-    del_exp_moving_average(tracker->exp_moving_avg);
     free(tracker);
 };
 
 void update_tracker(BatteryTracker * tracker) {
     // Update mean energy using simple moving average method
     update_info(tracker->bat_info);
-    if (tracker->bat_info->state_changed) {
-        progress_avg(tracker->exp_moving_avg, system_uptime_in_seconds(),
-                    tracker->bat_info->energy_now);
-    }
 };
 
 void rotate_display_mode(BatteryTracker * tracker) {
@@ -71,7 +62,7 @@ double seconds_until_end(BatteryTracker * tracker) {
     // full. When it's discharging, we want to know when it reaches 0.
     double goal_amount = tracker->bat_info->energy_full
         * tracker->bat_info->is_charging;
-    return time_remaining(tracker->exp_moving_avg, goal_amount);
+    return time_remaining(tracker->bat_info->moving_avg, goal_amount);
 };
 
 void load_battery_percent(BatteryTracker * tracker) {
