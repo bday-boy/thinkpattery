@@ -19,9 +19,9 @@ void switch_mode(int signal_num) {
     rotate_display_mode(bat);
 };
 
-void init_timespec(struct timespec * tim) {
+void init_timespec(struct timespec * tim, double sleep_seconds) {
     double whole_seconds;
-    double decimal_seconds = modf(SAMPLE_FREQUENCY, &whole_seconds);
+    double decimal_seconds = modf(sleep_seconds, &whole_seconds);
 
     tim->tv_sec = (time_t) whole_seconds;
     tim->tv_nsec = (long int) (decimal_seconds * 1000000000.0);
@@ -36,7 +36,9 @@ int main() {
 
     bat = new_tracker();
     struct timespec tim;
-    init_timespec(&tim);
+    init_timespec(&tim, SAMPLE_FREQUENCY);
+
+    print_info(bat);
 
     while (1) {
         update_tracker(bat);

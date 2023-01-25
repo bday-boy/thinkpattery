@@ -28,8 +28,7 @@ typedef struct BatteryInfo {
 BatteryInfo * new_bat_info();
 void del_battery_info(BatteryInfo * bat_info);
 
-void update_info(BatteryInfo * bat_info);
-void update_percent(BatteryInfo * bat_info);
-void update_health(BatteryInfo * bat_info);
+void * update_energy(BatteryInfo * bat_info);
+void * update_health(BatteryInfo * bat_info);
 
 #endif // BATTERY_INFO_H_

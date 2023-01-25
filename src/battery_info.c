@@ -2,6 +2,17 @@
 
 #include "battery_info.h"
 
+// Given a part and a whole, find what percent of the whole is taken up by the
+// part and set its value into the percent_addr address. Set to -1 if either
+// number is negative.
+void calculate_percent(double part, double whole, double * percent_addr) {
+    if (part >= 0.0 && whole > 0.0) {
+        *percent_addr = 100.0 * (part / whole);
+    } else {
+        *percent_addr = NO_INFO;
+    }
+};
+
 BatteryInfo * new_bat_info() {
     BatteryInfo * bat_info = malloc(sizeof(BatteryInfo));
 
@@ -14,9 +25,12 @@ BatteryInfo * new_bat_info() {
 
     bat_info->moving_avg = new_exp_moving_average(bat_info->energy_now);
 
-    update_health(bat_info);
+    calculate_percent(bat_info->energy_now, bat_info->energy_full,
+                        &bat_info->percent_now);
+    calculate_percent(bat_info->energy_full, bat_info->energy_design,
+                      &bat_info->battery_health);
 
-    bat_info->state_changed = 0;
+    bat_info->state_changed = 1;
 
     return bat_info;
 };
@@ -27,7 +41,7 @@ void del_battery_info(BatteryInfo * bat_info) {
     free(bat_info);
 };
 
-void update_info(BatteryInfo * bat_info) {
+void * update_energy(BatteryInfo * bat_info) {
     // Read new data from battery and AC files
     double energy_now = bat_energy_now(bat_info->bfmanager);
     short is_charging = bat_is_charging(bat_info->bfmanager);
@@ -42,28 +56,20 @@ void update_info(BatteryInfo * bat_info) {
     if (bat_info->state_changed) {
         bat_info->energy_now = energy_now;
         bat_info->is_charging = is_charging;
-        update_percent(bat_info);
+        calculate_percent(energy_now, bat_info->energy_full,
+                          &bat_info->percent_now);
         progress_avg(bat_info->moving_avg, energy_now);
     }
+
+    return NULL;
 };
 
-void update_percent(BatteryInfo * bat_info) {
-    if (bat_info->energy_now > 0.0 && bat_info->energy_full > 0.0) {
-        bat_info->percent_now = 100.0
-            * (bat_info->energy_now / bat_info->energy_full);
-    } else {
-        bat_info->percent_now = NO_INFO;
-    }
-};
-
-void update_health(BatteryInfo * bat_info) {
+void * update_health(BatteryInfo * bat_info) {
+    // We are defining "health" as the ratio of the battery's current maximum
+    // energy capacity and the battery's factory maximum energy capacity
     bat_info->energy_full = bat_energy_full(bat_info->bfmanager);
     bat_info->energy_design = bat_energy_design(bat_info->bfmanager);
-
-    if (bat_info->energy_full > 0.0 && bat_info->energy_design > 0.0) {
-        bat_info->battery_health = 100.0
-            * (bat_info->energy_full / bat_info->energy_design);
-    } else {
-        bat_info->battery_health = NO_INFO;
-    }
+    calculate_percent(bat_info->energy_full, bat_info->energy_design,
+                      &bat_info->battery_health);
+    return NULL;
 };
