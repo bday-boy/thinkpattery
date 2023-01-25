@@ -2,9 +2,9 @@
 CC=gcc
 
 # compiler flags:
-#  -g    adds debugging information to the executable file
-#  -Wall turns on most, but not all, compiler warnings
-#  -O4   the highest level of compiler opimizations
+#  -lm   	links to some necessary math libraries
+#  -Wall 	turns on most, but not all, compiler warnings
+#  -O4   	the highest level of compiler opimizations
 CFLAGS=-lm -Wall -O4
 
 # the build target executable:
