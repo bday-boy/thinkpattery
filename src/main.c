@@ -7,8 +7,6 @@
 
 #include "battery_tracker.h"
 
-pthread_mutex_t energy_mutex, health_mutex;
-
 BatteryTracker * bat;
 
 // Battery info doesn't change that often so we really don't need to sample
