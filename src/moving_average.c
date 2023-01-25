@@ -5,16 +5,18 @@
 #include "files.h"
 
 ExponentialMovingAverage * new_exp_moving_average(double initial_sample) {
-    ExponentialMovingAverage * exp_moving_avg =
-        malloc(sizeof(ExponentialMovingAverage));
+    ExponentialMovingAverage * exp_moving_avg = malloc(sizeof(ExponentialMovingAverage));
+    init_exp_moving_average(exp_moving_avg, initial_sample);
+    return exp_moving_avg;
+};
 
+void init_exp_moving_average(ExponentialMovingAverage * exp_moving_avg,
+                             double initial_sample) {
     exp_moving_avg->alpha = ALPHA;
     exp_moving_avg->speed = 0.0;
     exp_moving_avg->time = system_uptime_in_seconds();
     exp_moving_avg->sample = initial_sample;
     exp_moving_avg->num_samples = 0;
-
-    return exp_moving_avg;
 };
 
 void del_exp_moving_average(ExponentialMovingAverage * exp_moving_avg) {

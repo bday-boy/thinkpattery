@@ -26,6 +26,7 @@ typedef struct BatteryInfo {
 } BatteryInfo;
 
 BatteryInfo * new_bat_info();
+void init_bat_info(BatteryInfo * bat_info);
 void del_battery_info(BatteryInfo * bat_info);
 
 void * update_energy(BatteryInfo * bat_info);

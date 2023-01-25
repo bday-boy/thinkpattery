@@ -15,7 +15,11 @@ void calculate_percent(double part, double whole, double * percent_addr) {
 
 BatteryInfo * new_bat_info() {
     BatteryInfo * bat_info = malloc(sizeof(BatteryInfo));
+    init_bat_info(bat_info);
+    return bat_info;
+};
 
+void init_bat_info(BatteryInfo * bat_info) {
     bat_info->bfmanager = new_battery_file_manager();
 
     bat_info->energy_full = bat_energy_full(bat_info->bfmanager);
@@ -31,8 +35,6 @@ BatteryInfo * new_bat_info() {
                       &bat_info->battery_health);
 
     bat_info->state_changed = 1;
-
-    return bat_info;
 };
 
 void del_battery_info(BatteryInfo * bat_info) {

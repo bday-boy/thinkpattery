@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 #include "battery_tracker.h"
+#include "config.h"
 
 const char * charging_icon = "";
 const char * percent_icons[] = {"", "", "", "", ""};
@@ -14,22 +15,22 @@ const char * percent_format = "%s %.1lf%%\n";
 const char * time_format = "%s %.0lfmin\n";
 const char * health_format = "%s %.1lf%%\n";
 
-BatteryTracker * new_tracker() {
+BatteryTracker * new_tracker(BatteryInfo * bat_info) {
     BatteryTracker * tracker = malloc(sizeof(BatteryTracker));
+    init_tracker(tracker, bat_info);
+    return tracker;
+};
 
-    tracker->bat_info = new_bat_info();
-
+void init_tracker(BatteryTracker * tracker, BatteryInfo * bat_info) {
+    tracker->bat_info = bat_info;
     tracker->icon = percent_icons[0];
     tracker->print_number = -1.0;
     tracker->print_format = percent_format;
     tracker->mode = PERCENT_MODE;
     tracker->changed_mode = 0;
-
-    return tracker;
 };
 
 void del_tracker(BatteryTracker * tracker) {
-    del_battery_info(tracker->bat_info);
     free(tracker);
 };
 

@@ -26,6 +26,8 @@ typedef struct ExponentialMovingAverage {
 } ExponentialMovingAverage;
 
 ExponentialMovingAverage * new_exp_moving_average(double initial_sample);
+void init_exp_moving_average(ExponentialMovingAverage * exp_moving_avg,
+                             double initial_sample);
 void del_exp_moving_average(ExponentialMovingAverage * exp_moving_avg);
 
 void progress_avg(ExponentialMovingAverage * exp_moving_avg, double new_sample);

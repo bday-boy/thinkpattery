@@ -38,7 +38,8 @@ typedef struct BatteryTracker {
     unsigned short changed_mode;
 } BatteryTracker;
 
-BatteryTracker * new_tracker();
+BatteryTracker * new_tracker(BatteryInfo * bat_info);
+void init_tracker(BatteryTracker * tracker, BatteryInfo * bat_info);
 void del_tracker(BatteryTracker * tracker);
 
 // Changes the display mode and refreshes the data that doesn't need to be

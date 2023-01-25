@@ -23,6 +23,7 @@ typedef struct BatteryFileManager {
 } BatteryFileManager;
 
 BatteryFileManager * new_battery_file_manager();
+void init_battery_file_manager(BatteryFileManager * bfmanager);
 void del_battery_file_manager(BatteryFileManager * bfmanager);
 
 // Checks if the AC adapter is connected

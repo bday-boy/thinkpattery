@@ -9,7 +9,6 @@
 #include "config.h"
 
 BatteryTracker * bat;
-PolybarConfig * config;
 
 // Battery info doesn't change that often so we really don't need to sample
 // that much
@@ -70,7 +69,13 @@ int main() {
     // Sets up handling SIGUSR1 to change battery tracker mode
     signal(SIGUSR1, switch_mode);
 
-    bat = new_tracker();
+    BatteryInfo bat_info;
+    init_bat_info(&bat_info);
+
+    PolybarConfig config;
+    init_config(&config);
+
+    bat = new_tracker(&bat_info);
     print_info(bat);
 
     // Declare thread for printing data

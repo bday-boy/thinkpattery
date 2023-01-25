@@ -24,6 +24,11 @@ unsigned short starts_with(char * str_to_check, const char * prefix,
 
 BatteryFileManager * new_battery_file_manager() {
     BatteryFileManager * bfmanager = malloc(sizeof(BatteryFileManager));
+    init_battery_file_manager(bfmanager);
+    return bfmanager;
+};
+
+void init_battery_file_manager(BatteryFileManager * bfmanager) {
     bfmanager->num_batteries = 0;
 
     const size_t file_memsize = sizeof(char) * MAX_FILENAME_LEN;
@@ -33,7 +38,7 @@ BatteryFileManager * new_battery_file_manager() {
     DIR * dfd = opendir(power_supply_dir);
     if (dfd == NULL) {
         // TODO: Error log here, maybe even exit program
-        return NULL;
+        exit(EXIT_FAILURE);
     }
     while ((dp = readdir(dfd)) != NULL) {
         bfmanager->num_batteries += starts_with(dp->d_name, bat_dir, 3);
@@ -67,8 +72,6 @@ BatteryFileManager * new_battery_file_manager() {
     bfmanager->ac_online_file = malloc(file_memsize);
     snprintf(bfmanager->ac_online_file, MAX_FILENAME_LEN, "%s/%s/%s",
              power_supply_dir, ac_dir, ac_online_file);
-
-    return bfmanager;
 };
 
 void del_battery_file_manager(BatteryFileManager * bfmanager) {
