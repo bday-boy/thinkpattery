@@ -7,13 +7,12 @@
 - Add config through Polybar 3.6.0 env variables
   - Icons for:
     - Charging
-      - Charging
-      - Not charging
-    - Battery health
+    - Battery energy
       - Low threshold battery
       - High threshold battery
-      - Any number of middle icons
+      - 3 middle icons
     - Time left
+    - Battery health
   - Print formatting (possibly)
   - Sample frequency
   - Number of initial samples
