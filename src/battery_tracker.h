@@ -27,11 +27,11 @@ typedef enum battery_percent_icons_t {
 } battery_percent_icons_t;
 
 typedef struct BatteryTracker {
-    // Manages battery state info and gathering
+    // Manages battery state info, i.e. energy and charging status
     BatteryInfo * bat_info;
 
     // Info display variables
-    double print_variable;
+    double print_number;
     const char * icon;
     const char * print_format;
     output_modes_t mode;
@@ -40,9 +40,6 @@ typedef struct BatteryTracker {
 
 BatteryTracker * new_tracker();
 void del_tracker(BatteryTracker * tracker);
-
-// Called each program iteration since we need data regardless.
-void update_tracker(BatteryTracker * tracker);
 
 // Changes the display mode and refreshes the data that doesn't need to be
 // changed very often.

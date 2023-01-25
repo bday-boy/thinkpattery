@@ -13,7 +13,7 @@ BatteryTracker * bat;
 
 // Battery info doesn't change that often so we really don't need to sample
 // that much
-const double PRINT_PERIOD = 5.0;
+const double PRINT_FREQUENCY = 5.0;
 const double ENERGY_SAMPLE_FREQUENCY = 3.0;
 const double HEALTH_SAMPLE_FREQUENCY = 15.0;
 
@@ -35,7 +35,7 @@ void init_timespec(struct timespec * tim, double sleep_seconds) {
 
 void * print_info_periodically() {
     struct timespec print_period;
-    init_timespec(&print_period, PRINT_PERIOD);
+    init_timespec(&print_period, PRINT_FREQUENCY);
     while (1) {
         print_info(bat);
         printf("Running print_info.\n");

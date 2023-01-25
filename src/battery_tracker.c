@@ -20,7 +20,7 @@ BatteryTracker * new_tracker() {
     tracker->bat_info = new_bat_info();
 
     tracker->icon = percent_icons[0];
-    tracker->print_variable = -1.0;
+    tracker->print_number = -1.0;
     tracker->print_format = percent_format;
     tracker->mode = PERCENT_MODE;
     tracker->changed_mode = 0;
@@ -31,11 +31,6 @@ BatteryTracker * new_tracker() {
 void del_tracker(BatteryTracker * tracker) {
     del_battery_info(tracker->bat_info);
     free(tracker);
-};
-
-void update_tracker(BatteryTracker * tracker) {
-    // Update mean energy using simple moving average method
-    update_energy(tracker->bat_info);
 };
 
 void rotate_display_mode(BatteryTracker * tracker) {
@@ -68,36 +63,36 @@ double seconds_until_end(BatteryTracker * tracker) {
 void load_battery_percent(BatteryTracker * tracker) {
     const double remaining_percent = tracker->bat_info->percent_now;
     if (remaining_percent < 0.0) {
-        tracker->print_variable = remaining_percent;
+        tracker->print_number = remaining_percent;
         tracker->icon = percent_icons[0];
         return;
     }
     tracker->icon = get_percent_icon(tracker->bat_info->is_charging,
                                      remaining_percent);
-    tracker->print_variable = remaining_percent;
+    tracker->print_number = remaining_percent;
 };
 
 void load_time_left(BatteryTracker * tracker) {
     const double time_left = seconds_until_end(tracker);
     if (time_left == TIME_UNAVAILABLE) {
-        tracker->print_variable = time_left;
+        tracker->print_number = time_left;
         tracker->icon = percent_icons[0];
         return;
     }
     tracker->icon = time_icon;
-    tracker->print_variable = time_left / 60.0;
+    tracker->print_number = time_left / 60.0;
 };
 
 void load_battery_health(BatteryTracker * tracker) {
     if (tracker->bat_info->battery_health < 0.0) {
-        tracker->print_variable = NO_INFO;
+        tracker->print_number = NO_INFO;
         tracker->icon = health_icon_bad;
         return;
     }
     tracker->icon = (tracker->bat_info->battery_health > 60.0)
         ? health_icon_good
         : health_icon_bad;
-    tracker->print_variable = tracker->bat_info->battery_health;
+    tracker->print_number = tracker->bat_info->battery_health;
 };
 
 void print_info(BatteryTracker * tracker) {
@@ -117,7 +112,7 @@ void print_info(BatteryTracker * tracker) {
         default:
             exit(EXIT_FAILURE);
     };
-    printf(tracker->print_format, tracker->icon, tracker->print_variable);
+    printf(tracker->print_format, tracker->icon, tracker->print_number);
     tracker->changed_mode = 0;
 };
 
